@@ -11,6 +11,14 @@ build_app:
 	go run . bundlestatic
 	go mod tidy
 
+build_app_dev:
+	echo "Building app dev..."
+	echo "package views" > views/views.go
+	go run packages/prebuild/prebuild.go
+	go run . bundlestatic
+	go mod tidy
+	go run . run
+
 test_all:
 	echo "Testing..."
 	go test -coverprofile ./test/coverage.txt ./... && go tool cover -html=./test/coverage.txt -o ./test/coverage.html

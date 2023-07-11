@@ -20,7 +20,7 @@ type BuildCache struct {
 	EntMTime  int64
 }
 
-func getDirLastMTime(root string) int64 {
+func getDirLastMTime(root string) (int64, error) {
 	var lastModTime int64
 	if err := filepath.Walk(root, func(path string, info os.FileInfo, err error) error {
 		if !info.IsDir() {
@@ -30,31 +30,36 @@ func getDirLastMTime(root string) int64 {
 		}
 		return nil
 	}); err != nil {
-		panic(err)
+		return 0, err
 	}
-	return lastModTime
+	return lastModTime, nil
 }
 
-func getBuildCache(buildCacheFile string) BuildCache {
+func getBuildCache(buildCacheFile string) (BuildCache, error) {
 	buildCache := BuildCache{}
 	buildCacheBytes, err := ioutil.ReadFile(buildCacheFile)
-
-	if err == nil {
-		if err = json.Unmarshal(buildCacheBytes, &buildCache); err != nil {
-			log.Fatal(err)
+	if err == nil && len(buildCacheBytes) > 0 {
+		err = json.Unmarshal(buildCacheBytes, &buildCache)
+		if err != nil {
+			return buildCache, err
 		}
 	}
 
-	return buildCache
+	if buildCache.ViewMTime == nil {
+		buildCache.ViewMTime = make(map[string]int64)
+	}
+	return buildCache, nil
 }
 
 func BuildViewAssets(viewsDir, viewsOutputDir, buildCacheFile string, force bool) error {
-	buildCache := getBuildCache(buildCacheFile)
+	buildCache, err := getBuildCache(buildCacheFile)
+	if err != nil {
+		return err
+	}
 	cachedViewMTimes := buildCache.ViewMTime
 	changedPageFiles := make([]string, 0)
 	changedPartialsFiles := make([]string, 0)
 	changedFiles := make([]string, 0)
-
 	if !force {
 		if err := filepath.Walk(viewsDir, func(viewFilePath string, info os.FileInfo, err error) error {
 			if !info.IsDir() {
@@ -113,10 +118,19 @@ func BuildViewAssets(viewsDir, viewsOutputDir, buildCacheFile string, force bool
 	return nil
 }
 
+//Функция `GenerateEnt(buildCacheFile string, force bool)` принимает путь к файлу `cache.json` и флаг `force`.
+//Она проверяет, были ли изменены файлы схемы Ent с момента последней генерации кода Ent, используя информацию из
+//`cache.json`. Если были изменены файлы, функция вызывает команду `go generate` для генерации кода Ent. Затем функция
+//обновляет информацию о времени последнего изменения файлов схемы Ent в `cache.json`.
 func GenerateEnt(buildCacheFile string, force bool) error {
-	lastEntSchemaMTime := getDirLastMTime("./packages/entrepository/ent/schema")
-	buildCache := getBuildCache(buildCacheFile)
-
+	lastEntSchemaMTime, err := getDirLastMTime("./packages/entrepository/ent/schema")
+	if err != nil {
+		return err
+	}
+	buildCache, err := getBuildCache(buildCacheFile)
+	if err != nil {
+		return err
+	}
 	if force || lastEntSchemaMTime > buildCache.EntMTime {
 		fmt.Println("> Has ent schema changed")
 		buildCache.EntMTime = lastEntSchemaMTime
@@ -142,6 +156,11 @@ func GenerateEnt(buildCacheFile string, force bool) error {
 	return nil
 }
 
+//Основная функция `main()` сначала проверяет наличие флага `force`, который указывает, нужно ли принудительно
+//перекомпилировать представления и перегенерировать код Ent. Затем она вызывает функцию `createDir()`, чтобы
+//создать директорию и файл `cache.json`, если они не существуют. Затем вызывает функцию `BuildViewAssets()`
+//для компиляции файлов представлений и функцию `GenerateEnt()` для генерации кода Ent. Если во время выполнения
+//получены ошибки, они выводятся на экран и программа завершается с ошибкой.
 func main() {
 	force := false
 	if len(os.Args) > 1 {
@@ -154,9 +173,11 @@ func main() {
 		"./private/tmp/cache.json",
 		force,
 	); err != nil {
-		panic(err)
+		log.Fatal("Ошибка в функции BuildViewAssets", err)
+
 	}
 	if err := GenerateEnt("./private/tmp/cache.json", force); err != nil {
-		panic(err)
+		log.Fatal("Ошибка в функции GenerateEnt", err)
+
 	}
 }
