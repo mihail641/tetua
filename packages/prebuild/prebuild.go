@@ -166,6 +166,13 @@ func main() {
 	if len(os.Args) > 1 {
 		force = os.Args[1] == "--force"
 	}
+	// Создание директории и файла cache.json, если они не существуют
+	if err := createDir("./private/tmp"); err != nil {
+		log.Fatal("Ошибка при создании директории", err)
+	}
+	if err := createFileIfNotExist("./private/tmp/cache.json"); err != nil {
+		log.Fatal("Ошибка присоздании файла", err)
+	}
 
 	if err := BuildViewAssets(
 		path.Join("./app/themes", config.APP_THEME, "views"),
@@ -180,4 +187,22 @@ func main() {
 		log.Fatal("Ошибка в функции GenerateEnt", err)
 
 	}
+}
+
+func createDir(dirPath string) error {
+	if _, err := os.Stat(dirPath); os.IsNotExist(err) {
+		return os.MkdirAll(dirPath, 0755)
+	}
+	return nil
+}
+
+func createFileIfNotExist(filePath string) error {
+	if _, err := os.Stat(filePath); os.IsNotExist(err) {
+		file, err := os.Create(filePath)
+		if err != nil {
+			return err
+		}
+		return file.Close()
+	}
+	return nil
 }

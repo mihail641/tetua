@@ -11,5 +11,4 @@ dist/
 .vscode
 views
 .idea
-packages/editor/yarn.lock
 node_modules/
