@@ -1,0 +1,7 @@
+{
+ "app_env": "production",
+ "app_key": "BpLnfgDsc2WD8F2qNfHK5a84jjJkwzDk",
+ "app_port": "3000",
+ "db_dsn": "tetua_user_rbs:tetua_password_rbs@tcp(127.0.0.1:3406)/tetua?charset=utf8mb4&collation=utf8mb4_unicode_ci&parseTime=true",
+ "db_query_logging": false
+}
