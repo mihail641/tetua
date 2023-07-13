@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"github.com/ngocphuongnb/tetua/app/fs"
 	"io/ioutil"
 	mathrand "math/rand"
 	"os"
@@ -11,8 +12,6 @@ import (
 	"path/filepath"
 	"runtime"
 	"strings"
-
-	"github.com/ngocphuongnb/tetua/app/fs"
 )
 
 type SmtpConfig struct {

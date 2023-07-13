@@ -16,7 +16,6 @@ build_app_dev:
 	echo "package views" > views/views.go
 	go run packages/prebuild/prebuild.go
 	go run . bundlestatic
-	go mod tidy
 	go run . run
 
 test_all:
