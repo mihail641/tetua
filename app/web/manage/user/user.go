@@ -20,7 +20,11 @@ func Index(c server.Context) error {
 	status := http.StatusOK
 	page := c.QueryInt("page", 1)
 	search := c.Query("q")
-	data, err := repositories.User.Paginate(c.Context(), &e.UserFilter{Filter: &entities.Filter{Page: page, Search: search}})
+	data, err := repositories.User.Paginate(c.Context(), &e.UserFilter{
+		Filter: &entities.Filter{
+			BaseUrl: utils.Url("/manage/users"),
+			Page:    page,
+			Search:  search}})
 
 	if err != nil {
 		status = http.StatusBadRequest

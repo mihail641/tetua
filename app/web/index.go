@@ -66,8 +66,9 @@ func Search(c server.Context) (err error) {
 
 	paginate, err = repositories.Post.Paginate(c.Context(), &entities.PostFilter{
 		Filter: &entities.Filter{
-			Page:   c.QueryInt("page"),
-			Search: searchQuery,
+			BaseUrl: utils.Url("/search"),
+			Page:    c.QueryInt("page"),
+			Search:  searchQuery,
 		}})
 
 	if err != nil {

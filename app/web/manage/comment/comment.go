@@ -1,6 +1,7 @@
 package managecomment
 
 import (
+	"github.com/ngocphuongnb/tetua/app/utils"
 	"net/http"
 
 	"github.com/ngocphuongnb/tetua/app/entities"
@@ -16,8 +17,9 @@ func Index(c server.Context) (err error) {
 	userID := c.QueryInt("user")
 	filter := &entities.CommentFilter{
 		Filter: &entities.Filter{
-			Page:   c.QueryInt("page", 1),
-			Search: search,
+			BaseUrl: utils.Url("/manage/comments"),
+			Page:    c.QueryInt("page", 1),
+			Search:  search,
 		},
 	}
 	if postID > 0 {
