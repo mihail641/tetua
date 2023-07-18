@@ -80,6 +80,10 @@ func Delete(c server.Context) error {
 		return c.Status(http.StatusBadRequest).SendString("Error deleting topic")
 	}
 
+	if err := cache.CacheTopics(c.Context()); err != nil {
+		c.Logger().Error("Error caching topics", err)
+		return c.Status(http.StatusBadRequest).SendString("Error cache topic")
+	}
 	return c.Status(http.StatusOK).SendString("Topic deleted")
 }
 

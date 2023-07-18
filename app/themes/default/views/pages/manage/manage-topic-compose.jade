@@ -4,7 +4,7 @@ include ../../partials/common.jade
 block footer
   !=asset.JsFile('js/main.js')
   script(src='/static/js/manage.js')
-  script listenDeleteNodeEvents('topic', '/manage/roles', '/manage/topics')
+  script listenDeleteNodeEvents('topic', '/manage/topics', '/manage/topics')
 
 block content
   :go:func ManageTopicCompose(topics []*entities.Topic, topic *entities.TopicMutation)
