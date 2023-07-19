@@ -14,9 +14,33 @@ import (
 )
 
 const (
-	topicindex__14 = `<link rel="alternate" type="application/rss+xml" title="`
-	topicindex__22 = `</ul><label class="menu-trigger"><svg viewBox="0 0 24 24"><path fill="currentColor" d="M3,6H21V8H3V6M3,11H21V13H3V11M3,16H21V18H3V16Z"></path></svg></label></nav></header><div class="wrapper"><div class="container"><div class="box page-desc"><h1>`
-	topicindex__24 = `</div><div class="layout"><div class="left"><div class="box fixed-sidebar"><h2 class="head">Topics</h2>`
+	topicindex__14  = `<link rel="alternate" type="application/rss+xml" title="`
+	topicindex__22  = `</ul><label class="menu-trigger"><svg viewBox="0 0 24 24"><path fill="currentColor" d="M3,6H21V8H3V6M3,11H21V13H3V11M3,16H21V18H3V16Z"></path></svg></label></nav></header><div class="wrapper"><div class="container"><div class="box page-desc"><h1>`
+	topicindex__23  = `</h1>`
+	topicindex__24  = `</div><div class="layout"><div class="left"><div class="box fixed-sidebar"><h2 class="head">Topics</h2>`
+	topicindex__25  = `</div></div><main class="main">`
+	topicindex__26  = `<div class="article-list">`
+	topicindex__29  = `</ul></main><div class="right"><div class="box fixed-sidebar"><h2>Top posts</h2><div class="posts-list">`
+	topicindex__30  = `</div></div></div></div></div><div class="mobile-menu"><div class="menu-head">`
+	topicindex__35  = `</body></html>`
+	topicindex__69  = `<div class="topics">`
+	topicindex__80  = `<article class="box"><a class="overlay" href="`
+	topicindex__84  = `<div class="box-content">`
+	topicindex__85  = `<div class="info"><h3><a href="`
+	topicindex__88  = `</a></h3><div class="tags">`
+	topicindex__89  = `</div></div></div></article>`
+	topicindex__90  = `<a class="bg" href="`
+	topicindex__92  = `" style="`
+	topicindex__99  = `</a><div class="stat flex"><time datetime="`
+	topicindex__100 = `" class="date">`
+	topicindex__101 = `</time><span class="views">`
+	topicindex__102 = `</span><span class="comment">`
+	topicindex__103 = `</span></div></div></div>`
+	topicindex__112 = `<article><h4>`
+	topicindex__116 = `</a></h4><div class="tags">`
+	topicindex__117 = `</div></article>`
+	topicindex__118 = `<span class="pos">`
+	topicindex__119 = `</span>`
 )
 
 func TopicView(topics []*entities.Topic, topic *entities.Topic, paginate *entities.Paginate[entities.Post], topPosts []*entities.Post) func(meta *entities.Meta, wr *bufio.Writer) {
@@ -150,7 +174,7 @@ func TopicView(topics []*entities.Topic, topic *entities.Topic, paginate *entiti
 		}
 		buffer.WriteString(topicindex__22)
 		WriteAll(topic.Name, true, buffer)
-		buffer.WriteString(error__20)
+		buffer.WriteString(topicindex__23)
 		WriteAll(topic.ContentHTML, false, buffer)
 		buffer.WriteString(topicindex__24)
 
@@ -159,7 +183,7 @@ func TopicView(topics []*entities.Topic, topic *entities.Topic, paginate *entiti
 				topics = topics
 			)
 
-			buffer.WriteString(index__66)
+			buffer.WriteString(topicindex__69)
 			for _, topic := range topics {
 				buffer.WriteString(commentlist__106)
 				WriteAll(topic.Url(), true, buffer)
@@ -172,7 +196,7 @@ func TopicView(topics []*entities.Topic, topic *entities.Topic, paginate *entiti
 			buffer.WriteString(commentlist__22)
 		}
 
-		buffer.WriteString(index__21)
+		buffer.WriteString(topicindex__25)
 
 		{
 			var (
@@ -193,7 +217,7 @@ func TopicView(topics []*entities.Topic, topic *entities.Topic, paginate *entiti
 			}
 		}
 
-		buffer.WriteString(index__22)
+		buffer.WriteString(topicindex__26)
 		for _, post := range paginate.Data {
 			{
 				var (
@@ -205,7 +229,7 @@ func TopicView(topics []*entities.Topic, topic *entities.Topic, paginate *entiti
 				if post.FeaturedImage != nil {
 					bgStyle = fmt.Sprintf("background-image:url('%s')", post.FeaturedImage.Url())
 				}
-				buffer.WriteString(index__77)
+				buffer.WriteString(topicindex__80)
 				WriteAll(postUrl, true, buffer)
 				buffer.WriteString(commentlist__49)
 				WriteAll(post.Name, true, buffer)
@@ -213,17 +237,17 @@ func TopicView(topics []*entities.Topic, topic *entities.Topic, paginate *entiti
 				WriteAll(post.Name, true, buffer)
 				buffer.WriteString(commentlist__132)
 				if post.FeaturedImage != nil && post.FeaturedImage.ID > 0 {
-					buffer.WriteString(index__87)
+					buffer.WriteString(topicindex__90)
 					WriteAll(postUrl, true, buffer)
 					buffer.WriteString(commentlist__49)
 					WriteAll(post.Name, true, buffer)
-					buffer.WriteString(index__89)
+					buffer.WriteString(topicindex__92)
 					WriteEscString(bgStyle, buffer)
 					buffer.WriteString(commentlist__50)
 					WriteAll(post.Name, true, buffer)
 					buffer.WriteString(commentlist__132)
 				}
-				buffer.WriteString(index__81)
+				buffer.WriteString(topicindex__84)
 				{
 					buffer.WriteString(commentlist__63)
 					WriteAll(post.User.AvatarElm("32", "32", false), false, buffer)
@@ -233,25 +257,25 @@ func TopicView(topics []*entities.Topic, topic *entities.Topic, paginate *entiti
 					WriteAll(post.User.Name(), true, buffer)
 					buffer.WriteString(commentlist__50)
 					WriteAll(post.User.Name(), true, buffer)
-					buffer.WriteString(index__96)
+					buffer.WriteString(topicindex__99)
 					WriteAll(post.CreatedAt.Format("2006-01-02T15:04:05-0700"), true, buffer)
-					buffer.WriteString(index__97)
+					buffer.WriteString(topicindex__100)
 					WriteAll(post.CreatedAt.Format("January 2, 2006"), true, buffer)
-					buffer.WriteString(index__98)
+					buffer.WriteString(topicindex__101)
 					WriteEscString(fmt.Sprintf("%d views", post.ViewCount), buffer)
-					buffer.WriteString(index__99)
+					buffer.WriteString(topicindex__102)
 					WriteEscString(fmt.Sprintf("%d comments", post.CommentCount), buffer)
-					buffer.WriteString(index__100)
+					buffer.WriteString(topicindex__103)
 
 				}
 
-				buffer.WriteString(index__82)
+				buffer.WriteString(topicindex__85)
 				WriteAll(postUrl, true, buffer)
 				buffer.WriteString(commentlist__49)
 				WriteAll(post.Name, true, buffer)
 				buffer.WriteString(commentlist__50)
 				WriteAll(post.Name, true, buffer)
-				buffer.WriteString(index__85)
+				buffer.WriteString(topicindex__88)
 
 				for _, topic := range post.Topics {
 					buffer.WriteString(commentlist__106)
@@ -262,7 +286,7 @@ func TopicView(topics []*entities.Topic, topic *entities.Topic, paginate *entiti
 					WriteAll("#"+topic.Name, true, buffer)
 					buffer.WriteString(commentlist__132)
 				}
-				buffer.WriteString(index__86)
+				buffer.WriteString(topicindex__89)
 
 			}
 
@@ -280,7 +304,7 @@ func TopicView(topics []*entities.Topic, topic *entities.Topic, paginate *entiti
 			buffer.WriteString(commentlist__105)
 
 		}
-		buffer.WriteString(index__25)
+		buffer.WriteString(topicindex__29)
 
 		for pos, post := range topPosts {
 			{
@@ -289,12 +313,12 @@ func TopicView(topics []*entities.Topic, topic *entities.Topic, paginate *entiti
 					pos  = pos + 1
 				)
 
-				buffer.WriteString(index__109)
+				buffer.WriteString(topicindex__112)
 
 				if pos > 0 {
-					buffer.WriteString(index__115)
+					buffer.WriteString(topicindex__118)
 					WriteEscString(fmt.Sprintf("# %d", pos), buffer)
-					buffer.WriteString(index__116)
+					buffer.WriteString(topicindex__119)
 				}
 				buffer.WriteString(commentlist__106)
 				WriteAll(post.Url(), true, buffer)
@@ -302,7 +326,7 @@ func TopicView(topics []*entities.Topic, topic *entities.Topic, paginate *entiti
 				WriteAll(post.Name, true, buffer)
 				buffer.WriteString(commentlist__50)
 				WriteAll(post.Name, true, buffer)
-				buffer.WriteString(index__113)
+				buffer.WriteString(topicindex__116)
 
 				for _, topic := range post.Topics {
 					buffer.WriteString(commentlist__106)
@@ -313,11 +337,11 @@ func TopicView(topics []*entities.Topic, topic *entities.Topic, paginate *entiti
 					WriteAll("#"+topic.Name, true, buffer)
 					buffer.WriteString(commentlist__132)
 				}
-				buffer.WriteString(index__114)
+				buffer.WriteString(topicindex__117)
 			}
 
 		}
-		buffer.WriteString(index__26)
+		buffer.WriteString(topicindex__30)
 		WriteAll(config.Setting("app_name"), true, buffer)
 		buffer.WriteString(commentlist__25)
 
@@ -394,7 +418,7 @@ func TopicView(topics []*entities.Topic, topic *entities.Topic, paginate *entiti
 		buffer.WriteString(commentlist__28)
 		WriteAll(config.Setting("inject_footer"), false, buffer)
 		WriteAll(asset.JsFile("js/layout.js"), false, buffer)
-		buffer.WriteString(error__26)
+		buffer.WriteString(topicindex__35)
 
 	}
 }
