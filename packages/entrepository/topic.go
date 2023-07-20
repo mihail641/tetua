@@ -54,6 +54,8 @@ func CreateTopicRepository(client *ent.Client) *TopicRepository {
 					SetContentHTML(data.ContentHTML)
 				if data.ParentID != 0 {
 					tc = tc.SetParentID(data.ParentID)
+				} else {
+					tc = tc.ClearParentID()
 				}
 				return tc.Save(ctx)
 			},
