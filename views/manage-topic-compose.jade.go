@@ -43,7 +43,7 @@ const (
 	managetopiccompose__27  = `<strong>Topics</strong><div class="menu-topics">`
 	managetopiccompose__28  = `</div></div></div><div class="overlay menu-trigger"></div><footer><div class="container"><div>`
 	managetopiccompose__29  = `</div><p>Proudly powered by <a href="https://tetua.net" title="Tetua - CMS Platform for Blogging">Tetua</a></p></div></footer>`
-	managetopiccompose__30  = `<script src="/static/js/manage.js"></script><script>listenDeleteNodeEvents('topic','/manage/topics', '/manage/topics')</script></body></html>`
+	managetopiccompose__30  = `<script src="/static/js/manage.js"></script><script>listenDeleteNodeEvents('topic', '/manage/topics', '/manage/topics')</script></body></html>`
 	managetopiccompose__31  = `<link rel="icon" type="image/png" href="`
 	managetopiccompose__32  = `"/><link rel="apple-touch-icon" href="`
 	managetopiccompose__34  = `<meta name="description" content="`
