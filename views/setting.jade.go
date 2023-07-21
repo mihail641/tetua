@@ -13,177 +13,262 @@ import (
 )
 
 const (
-	setting__23 = `</div></div><div class="right"><div class="box fixed-sidebar"><div class="save-actions"><button>Save</button></div><div><strong>Avatar</strong><input class="image-input" id="avatar-image" type="file" name="avatar_image"/><div class="image-upload-previewer" for="avatar-image">`
+	setting__0   = `<!DOCTYPE html><html lang="en">`
+	setting__1   = `<head><meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/><title>`
+	setting__2   = `</title><meta name="keywords" content="software development, devloper community"/><link rel="canonical" href="`
+	setting__3   = `"/><meta property="og:type" content="`
+	setting__4   = `"/><meta property="og:url" content="`
+	setting__5   = `"/><meta property="og:title" content="`
+	setting__6   = `"/><meta property="og:site_name" content="`
+	setting__7   = `"/><meta name="twitter:site" content="`
+	setting__8   = `"/><meta name="twitter:title" content="`
+	setting__9   = `"/><meta name="twitter:card" content="summary_large_image"/><meta name="apple-mobile-web-app-title" content="`
+	setting__10  = `"/><meta name="application-name" content="`
+	setting__11  = `"/><link rel="alternate" type="application/rss+xml" title="`
+	setting__12  = `" href="`
+	setting__13  = `"/>`
+	setting__14  = `</head><body><header><nav class="main container"><a class="logo" href="`
+	setting__15  = `" title="Home">`
+	setting__16  = `</a><form class="search-form" method="get" action="/search" accept-charset="UTF-8"><input class="search-input" type="text" name="q" placeholder="Search..." autocomplete="off" value="`
+	setting__17  = `"/><button class="search-btn" type="submit" aria-label="Search"><svg viewBox="0 0 24 24"><path fill="currentColor" d="M9.5,3A6.5,6.5 0 0,1 16,9.5C16,11.11 15.41,12.59 14.44,13.73L14.71,14H15.5L20.5,19L19,20.5L14,15.5V14.71L13.73,14.44C12.59,15.41 11.11,16 9.5,16A6.5,6.5 0 0,1 3,9.5A6.5,6.5 0 0,1 9.5,3M9.5,5C7,5 5,7 5,9.5C5,12 7,14 9.5,14C12,14 14,12 14,9.5C14,7 12,5 9.5,5Z"></path></svg></button></form><ul><li class="search-mobile"><a href="`
+	setting__18  = `"><svg viewBox="0 0 24 24"><path fill="currentColor" d="M9.5,3A6.5,6.5 0 0,1 16,9.5C16,11.11 15.41,12.59 14.44,13.73L14.71,14H15.5L20.5,19L19,20.5L14,15.5V14.71L13.73,14.44C12.59,15.41 11.11,16 9.5,16A6.5,6.5 0 0,1 3,9.5A6.5,6.5 0 0,1 9.5,3M9.5,5C7,5 5,7 5,9.5C5,12 7,14 9.5,14C12,14 14,12 14,9.5C14,7 12,5 9.5,5Z"></path></svg></a></li>`
+	setting__19  = `</ul><label class="menu-trigger"><svg viewBox="0 0 24 24"><path fill="currentColor" d="M3,6H21V8H3V6M3,11H21V13H3V11M3,16H21V18H3V16Z"></path></svg></label></nav></header><div class="wrapper"><div class="container"><form method="POST" enctype="multipart/form-data"><div class="layout"><div class="left"><div class="box fixed-sidebar">`
+	setting__20  = `</div></div><div class="main"><div class="box"><h1>`
+	setting__21  = `</h1>`
+	setting__22  = `<hr/><strong>To keep the old password, leave this field blank.</strong>`
+	setting__23  = `</div></div><div class="right"><div class="box fixed-sidebar"><div class="save-actions"><button>Save</button></div><div><strong>Avatar</strong><input class="image-input" id="avatar-image" type="file" name="avatar_image"/><div class="image-upload-previewer" for="avatar-image">`
+	setting__24  = `</div></div></div></div></div></form></div><div class="mobile-menu"><div class="menu-head">`
+	setting__25  = `<label class="menu-trigger menu-close"><svg viewBox="0 0 24 24"><path fill="currentColor" d="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z"></path></svg></label></div>`
+	setting__26  = `<strong>Topics</strong><div class="menu-topics">`
+	setting__27  = `</div></div></div><div class="overlay menu-trigger"></div><footer><div class="container"><div>`
+	setting__28  = `</div><p>Proudly powered by <a href="https://tetua.net" title="Tetua - CMS Platform for Blogging">Tetua</a></p></div></footer>`
+	setting__29  = `</body></html>`
+	setting__30  = `<link rel="icon" type="image/png" href="`
+	setting__31  = `"/><link rel="apple-touch-icon" href="`
+	setting__33  = `<meta name="description" content="`
+	setting__34  = `"/><meta property="og:description" content="`
+	setting__35  = `"/><meta name="twitter:description" content="`
+	setting__37  = `<meta property="og:image" content="`
+	setting__38  = `"/><meta name="twitter:image:src" content="`
+	setting__40  = `<img src="`
+	setting__41  = `" alt="`
+	setting__43  = `<svg viewBox="0 0 24 24"><path fill="#164e63" d="M11,6.5V9.33L8.33,12L11,14.67V17.5L5.5,12M13,6.43L18.57,12L13,17.57V14.74L15.74,12L13,9.26M5,3C3.89,3 3,3.9 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V5A2,2 0 0,0 19,3H5Z"></path></svg>`
+	setting__44  = `<li><a href="`
+	setting__45  = `">Login</a></li><li><a href="`
+	setting__46  = `">Register</a></li>`
+	setting__48  = `">New</a></li><li><div class="user-menu"><a href="`
+	setting__49  = `" title="`
+	setting__50  = `">`
+	setting__51  = `</a><svg viewBox="0 0 24 24"><path fill="currentColor" d="M7.41,8.58L12,13.17L16.59,8.58L18,10L12,16L6,10L7.41,8.58Z"></path></svg><ul class="sub">`
+	setting__53  = `">Profile</a></li><li><a href="`
+	setting__54  = `">Posts</a></li><li><a href="`
+	setting__55  = `">Setting</a></li><li><a href="`
+	setting__56  = `">Logout</a></li></ul></div></li>`
+	setting__57  = `<img class="avatar" src="`
+	setting__60  = `<span class="avatar none"></span>`
+	setting__62  = `">Manage</a></li>`
+	setting__63  = `<div class="meta flex">`
+	setting__64  = `<div><a class="author" href="`
+	setting__66  = `</a><div class="stat flex"><span>`
+	setting__67  = `</span></div></div></div><ul class="manage-features"><li><a href="`
+	setting__68  = `"><svg style="width:24px;height:24px" viewBox="0 0 24 24"><path fill="currentColor" d="M12,20C7.59,20 4,16.41 4,12C4,7.59 7.59,4 12,4C16.41,4 20,7.59 20,12C20,16.41 16.41,20 12,20M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M13,7H11V11H7V13H11V17H13V13H17V11H13V7Z"></path></svg>New post</a></li><li><a href="`
+	setting__69  = `"><svg viewBox="0 0 24 24"><path fill="currentColor" d="M20 5L20 19L4 19L4 5H20M20 3H4C2.89 3 2 3.89 2 5V19C2 20.11 2.89 21 4 21H20C21.11 21 22 20.11 22 19V5C22 3.89 21.11 3 20 3M18 15H6V17H18V15M10 7H6V13H10V7M12 9H18V7H12V9M18 11H12V13H18V11Z"></path></svg>My Posts</a></li><li><a href="`
+	setting__70  = `"><svg viewBox="0 0 24 24"><path fill="currentColor" d="M20 2H4C2.9 2 2 2.9 2 4V22L6 18H20C21.1 18 22 17.1 22 16V4C22 2.9 21.1 2 20 2M20 16H5.2L4 17.2V4H20V16Z"></path></svg>My Comments</a></li><li><a href="`
+	setting__71  = `"><svg viewBox="0 0 24 24"><path fill="currentColor" d="M21,17H7V3H21M21,1H7A2,2 0 0,0 5,3V17A2,2 0 0,0 7,19H21A2,2 0 0,0 23,17V3A2,2 0 0,0 21,1M3,5H1V21A2,2 0 0,0 3,23H19V21H3M15.96,10.29L13.21,13.83L11.25,11.47L8.5,15H19.5L15.96,10.29Z"></path></svg>My Files</a></li><li><a href="`
+	setting__72  = `"><svg viewBox="0 0 24 24"><path fill="currentColor" d="M12,8A4,4 0 0,1 16,12A4,4 0 0,1 12,16A4,4 0 0,1 8,12A4,4 0 0,1 12,8M12,10A2,2 0 0,0 10,12A2,2 0 0,0 12,14A2,2 0 0,0 14,12A2,2 0 0,0 12,10M10,22C9.75,22 9.54,21.82 9.5,21.58L9.13,18.93C8.5,18.68 7.96,18.34 7.44,17.94L4.95,18.95C4.73,19.03 4.46,18.95 4.34,18.73L2.34,15.27C2.21,15.05 2.27,14.78 2.46,14.63L4.57,12.97L4.5,12L4.57,11L2.46,9.37C2.27,9.22 2.21,8.95 2.34,8.73L4.34,5.27C4.46,5.05 4.73,4.96 4.95,5.05L7.44,6.05C7.96,5.66 8.5,5.32 9.13,5.07L9.5,2.42C9.54,2.18 9.75,2 10,2H14C14.25,2 14.46,2.18 14.5,2.42L14.87,5.07C15.5,5.32 16.04,5.66 16.56,6.05L19.05,5.05C19.27,4.96 19.54,5.05 19.66,5.27L21.66,8.73C21.79,8.95 21.73,9.22 21.54,9.37L19.43,11L19.5,12L19.43,13L21.54,14.63C21.73,14.78 21.79,15.05 21.66,15.27L19.66,18.73C19.54,18.95 19.27,19.04 19.05,18.95L16.56,17.95C16.04,18.34 15.5,18.68 14.87,18.93L14.5,21.58C14.46,21.82 14.25,22 14,22H10M11.25,4L10.88,6.61C9.68,6.86 8.62,7.5 7.85,8.39L5.44,7.35L4.69,8.65L6.8,10.2C6.4,11.37 6.4,12.64 6.8,13.8L4.68,15.36L5.43,16.66L7.86,15.62C8.63,16.5 9.68,17.14 10.87,17.38L11.24,20H12.76L13.13,17.39C14.32,17.14 15.37,16.5 16.14,15.62L18.57,16.66L19.32,15.36L17.2,13.81C17.6,12.64 17.6,11.37 17.2,10.2L19.31,8.65L18.56,7.35L16.15,8.39C15.38,7.5 14.32,6.86 13.12,6.62L12.75,4H11.25Z"></path></svg>Settings</a></li></ul>`
+	setting__73  = `<ul class="messages">`
+	setting__74  = `</ul>`
+	setting__75  = `<li class="`
+	setting__77  = `</li>`
+	setting__78  = `<p><label>`
+	setting__79  = `</label><input name="`
+	setting__80  = `" value="`
+	setting__81  = `"/></p>`
+	setting__95  = `</label><textarea name="`
+	setting__97  = `</textarea></p>`
+	setting__102 = `<a href="`
+	setting__103 = `">Login</a><a href="`
+	setting__104 = `">Register</a>`
+	setting__115 = `<h2 class="header"><a href="`
+	setting__116 = `">Manage</a></h2><ul class="manage-features"><li><a href="`
+	setting__117 = `"><svg viewBox="0 0 24 24"><path fill="currentColor" d="M9,1H19A2,2 0 0,1 21,3V19L19,18.13V3H7A2,2 0 0,1 9,1M15,20V7H5V20L10,17.82L15,20M15,5C16.11,5 17,5.9 17,7V23L10,20L3,23V7A2,2 0 0,1 5,5H15Z"></path></svg>Topics</a></li><li><a href="`
+	setting__118 = `"><svg viewBox="0 0 24 24"><path fill="currentColor" d="M20 5L20 19L4 19L4 5H20M20 3H4C2.89 3 2 3.89 2 5V19C2 20.11 2.89 21 4 21H20C21.11 21 22 20.11 22 19V5C22 3.89 21.11 3 20 3M18 15H6V17H18V15M10 7H6V13H10V7M12 9H18V7H12V9M18 11H12V13H18V11Z"></path></svg>Posts</a></li><li><a href="`
+	setting__119 = `"><svg viewBox="0 0 24 24"><path fill="currentColor" d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z"></path></svg>Pages</a></li><li><a href="`
+	setting__120 = `"><svg viewBox="0 0 24 24"><path fill="currentColor" d="M17 14.4C17.6 14.4 18.1 14.9 18.1 15.5S17.6 16.6 17 16.6 15.9 16.1 15.9 15.5 16.4 14.4 17 14.4M17 17.5C16.3 17.5 14.8 17.9 14.8 18.6C15.3 19.3 16.1 19.8 17 19.8S18.7 19.3 19.2 18.6C19.2 17.9 17.7 17.5 17 17.5M18 11.1V6.3L10.5 3L3 6.3V11.2C3 15.7 6.2 20 10.5 21C11.1 20.9 11.6 20.7 12.1 20.5C13.2 22 15 23 17 23C20.3 23 23 20.3 23 17C23 14 20.8 11.6 18 11.1M11 17C11 17.6 11.1 18.1 11.2 18.6C11 18.7 10.7 18.8 10.5 18.9C7.3 17.9 5 14.7 5 11.2V7.6L10.5 5.2L16 7.6V11.1C13.2 11.6 11 14 11 17M17 21C14.8 21 13 19.2 13 17S14.8 13 17 13 21 14.8 21 17 19.2 21 17 21Z"></path></svg>Roles</a></li><li><a href="`
+	setting__121 = `"><svg viewBox="0 0 24 24"><path fill="currentColor" d="M13.07 10.41A5 5 0 0 0 13.07 4.59A3.39 3.39 0 0 1 15 4A3.5 3.5 0 0 1 15 11A3.39 3.39 0 0 1 13.07 10.41M5.5 7.5A3.5 3.5 0 1 1 9 11A3.5 3.5 0 0 1 5.5 7.5M7.5 7.5A1.5 1.5 0 1 0 9 6A1.5 1.5 0 0 0 7.5 7.5M16 17V19H2V17S2 13 9 13 16 17 16 17M14 17C13.86 16.22 12.67 15 9 15S4.07 16.31 4 17M15.95 13A5.32 5.32 0 0 1 18 17V19H22V17S22 13.37 15.94 13Z"></path></svg>Users</a></li><li><a href="`
+	setting__122 = `"><svg viewBox="0 0 24 24"><path fill="currentColor" d="M20 2H4C2.9 2 2 2.9 2 4V22L6 18H20C21.1 18 22 17.1 22 16V4C22 2.9 21.1 2 20 2M20 16H5.2L4 17.2V4H20V16Z"></path></svg>Comments</a></li><li><a href="`
+	setting__123 = `"><svg viewBox="0 0 24 24"><path fill="currentColor" d="M21,17H7V3H21M21,1H7A2,2 0 0,0 5,3V17A2,2 0 0,0 7,19H21A2,2 0 0,0 23,17V3A2,2 0 0,0 21,1M3,5H1V21A2,2 0 0,0 3,23H19V21H3M15.96,10.29L13.21,13.83L11.25,11.47L8.5,15H19.5L15.96,10.29Z"></path></svg>Files</a></li><li><a href="`
+	setting__128 = `</a>`
 )
 
 func UserSetting(user *entities.User) func(meta *entities.Meta, wr *bufio.Writer) {
 	return func(meta *entities.Meta, wr *bufio.Writer) {
 		buffer := &WriterAsBuffer{wr}
 
-		buffer.WriteString(commentlist__0)
+		buffer.WriteString(setting__0)
 
 		var title = meta.GetTitle()
 		var appName = config.Setting("app_name")
 		var appLogo = config.Setting("app_logo")
-		buffer.WriteString(commentlist__1)
+		buffer.WriteString(setting__1)
 		WriteAll(title, true, buffer)
-		buffer.WriteString(commentlist__2)
+		buffer.WriteString(setting__2)
 		WriteAll(meta.Canonical, true, buffer)
-		buffer.WriteString(commentlist__3)
+		buffer.WriteString(setting__3)
 		WriteAll(meta.Type, true, buffer)
-		buffer.WriteString(commentlist__4)
+		buffer.WriteString(setting__4)
 		WriteAll(meta.Canonical, true, buffer)
-		buffer.WriteString(commentlist__5)
+		buffer.WriteString(setting__5)
 		WriteAll(title, true, buffer)
-		buffer.WriteString(commentlist__6)
+		buffer.WriteString(setting__6)
 		WriteAll(appName, true, buffer)
-		buffer.WriteString(commentlist__7)
+		buffer.WriteString(setting__7)
 		WriteAll(config.Setting("twitter_site"), true, buffer)
-		buffer.WriteString(commentlist__8)
+		buffer.WriteString(setting__8)
 		WriteAll(title, true, buffer)
-		buffer.WriteString(commentlist__9)
+		buffer.WriteString(setting__9)
 		WriteAll(appName, true, buffer)
-		buffer.WriteString(commentlist__10)
+		buffer.WriteString(setting__10)
 		WriteAll(appName, true, buffer)
-		buffer.WriteString(commentlist__11)
+		buffer.WriteString(setting__11)
 		WriteAll(appName+" Feed", true, buffer)
-		buffer.WriteString(commentlist__12)
+		buffer.WriteString(setting__12)
 		WriteAll(utils.Url("/feed"), true, buffer)
-		buffer.WriteString(commentlist__13)
+		buffer.WriteString(setting__13)
 		if appLogo != "" {
-			buffer.WriteString(commentlist__30)
+			buffer.WriteString(setting__30)
 			WriteAll(appLogo, true, buffer)
-			buffer.WriteString(commentlist__31)
+			buffer.WriteString(setting__31)
 			WriteAll(appLogo, true, buffer)
-			buffer.WriteString(commentlist__13)
+			buffer.WriteString(setting__13)
 		}
 		if meta.Description != "" {
-			buffer.WriteString(commentlist__33)
+			buffer.WriteString(setting__33)
 			WriteAll(meta.Description, true, buffer)
-			buffer.WriteString(commentlist__34)
+			buffer.WriteString(setting__34)
 			WriteAll(meta.Description, true, buffer)
-			buffer.WriteString(commentlist__35)
+			buffer.WriteString(setting__35)
 			WriteAll(meta.Description, true, buffer)
-			buffer.WriteString(commentlist__13)
+			buffer.WriteString(setting__13)
 		}
 		if meta.Image != "" {
-			buffer.WriteString(commentlist__37)
+			buffer.WriteString(setting__37)
 			WriteAll(meta.Image, true, buffer)
-			buffer.WriteString(commentlist__38)
+			buffer.WriteString(setting__38)
 			WriteAll(meta.Image, true, buffer)
-			buffer.WriteString(commentlist__13)
+			buffer.WriteString(setting__13)
 		}
 		WriteAll(asset.CssFile("css/light.min.css"), false, buffer)
 		WriteAll(asset.CssFile("css/style.css"), false, buffer)
 		WriteAll(config.Setting("inject_header"), false, buffer)
-		buffer.WriteString(commentlist__14)
+		buffer.WriteString(setting__14)
 		WriteAll(utils.Url(""), true, buffer)
-		buffer.WriteString(commentlist__15)
+		buffer.WriteString(setting__15)
 		var logoUrl = config.Setting("app_logo")
 		if logoUrl != "" {
-			buffer.WriteString(commentlist__40)
+			buffer.WriteString(setting__40)
 			WriteAll(logoUrl, true, buffer)
-			buffer.WriteString(commentlist__41)
+			buffer.WriteString(setting__41)
 			WriteAll(config.Setting("app_name"), true, buffer)
-			buffer.WriteString(commentlist__13)
+			buffer.WriteString(setting__13)
 		} else {
-			buffer.WriteString(commentlist__43)
+			buffer.WriteString(setting__43)
 
 		}
-		buffer.WriteString(commentlist__16)
+		buffer.WriteString(setting__16)
 		WriteAll(meta.Query, true, buffer)
-		buffer.WriteString(commentlist__17)
+		buffer.WriteString(setting__17)
 		WriteAll(utils.Url("/search"), true, buffer)
-		buffer.WriteString(commentlist__18)
+		buffer.WriteString(setting__18)
 
 		if meta.User == nil || meta.User.ID == 0 {
-			buffer.WriteString(commentlist__44)
+			buffer.WriteString(setting__44)
 			WriteAll(utils.Url("/login"), true, buffer)
-			buffer.WriteString(commentlist__45)
+			buffer.WriteString(setting__45)
 			WriteAll(utils.Url("/register"), true, buffer)
-			buffer.WriteString(commentlist__46)
+			buffer.WriteString(setting__46)
 
 		} else {
-			buffer.WriteString(commentlist__44)
+			buffer.WriteString(setting__44)
 			WriteAll(utils.Url("/posts/new"), true, buffer)
-			buffer.WriteString(commentlist__48)
+			buffer.WriteString(setting__48)
 			WriteAll(meta.User.Url(), true, buffer)
-			buffer.WriteString(commentlist__49)
+			buffer.WriteString(setting__49)
 			WriteAll(meta.User.Username, true, buffer)
-			buffer.WriteString(commentlist__50)
+			buffer.WriteString(setting__50)
 			if meta.User.AvatarImageUrl != "" {
-				buffer.WriteString(commentlist__57)
+				buffer.WriteString(setting__57)
 				WriteAll(meta.User.AvatarImageUrl, true, buffer)
-				buffer.WriteString(commentlist__41)
+				buffer.WriteString(setting__41)
 				WriteAll(meta.User.Username, true, buffer)
-				buffer.WriteString(commentlist__13)
+				buffer.WriteString(setting__13)
 			} else {
-				buffer.WriteString(commentlist__60)
+				buffer.WriteString(setting__60)
 
 			}
-			buffer.WriteString(commentlist__51)
+			buffer.WriteString(setting__51)
 
 			if meta.User != nil && meta.User.IsRoot() {
-				buffer.WriteString(commentlist__44)
+				buffer.WriteString(setting__44)
 				WriteAll(utils.Url("/manage"), true, buffer)
-				buffer.WriteString(commentlist__62)
+				buffer.WriteString(setting__62)
 
 			}
-			buffer.WriteString(commentlist__44)
+			buffer.WriteString(setting__44)
 			WriteAll(meta.User.Url(), true, buffer)
-			buffer.WriteString(commentlist__53)
+			buffer.WriteString(setting__53)
 			WriteAll(utils.Url("/posts"), true, buffer)
-			buffer.WriteString(commentlist__54)
+			buffer.WriteString(setting__54)
 			WriteAll(utils.Url("/settings"), true, buffer)
-			buffer.WriteString(commentlist__55)
+			buffer.WriteString(setting__55)
 			WriteAll(utils.Url("/logout"), true, buffer)
-			buffer.WriteString(commentlist__56)
+			buffer.WriteString(setting__56)
 
 		}
-		buffer.WriteString(managepagecompose__19)
+		buffer.WriteString(setting__19)
 
 		{
-			buffer.WriteString(commentlist__63)
+			buffer.WriteString(setting__63)
 			WriteAll(meta.User.AvatarElm("32", "32", false), false, buffer)
-			buffer.WriteString(commentlist__64)
+			buffer.WriteString(setting__64)
 			WriteAll(meta.User.Url(), true, buffer)
-			buffer.WriteString(commentlist__50)
+			buffer.WriteString(setting__50)
 			WriteAll(meta.User.Name(), true, buffer)
-			buffer.WriteString(commentlist__66)
+			buffer.WriteString(setting__66)
 			WriteAll("@"+meta.User.Username, true, buffer)
-			buffer.WriteString(commentlist__67)
+			buffer.WriteString(setting__67)
 			WriteAll(utils.Url("/posts/new"), true, buffer)
-			buffer.WriteString(commentlist__68)
+			buffer.WriteString(setting__68)
 			WriteAll(utils.Url("/posts"), true, buffer)
-			buffer.WriteString(commentlist__69)
+			buffer.WriteString(setting__69)
 			WriteAll(utils.Url("/comments"), true, buffer)
-			buffer.WriteString(commentlist__70)
+			buffer.WriteString(setting__70)
 			WriteAll(utils.Url("/files"), true, buffer)
-			buffer.WriteString(commentlist__71)
+			buffer.WriteString(setting__71)
 			WriteAll(utils.Url("/settings"), true, buffer)
-			buffer.WriteString(commentlist__72)
+			buffer.WriteString(setting__72)
 
 		}
 
-		buffer.WriteString(managesettings__20)
+		buffer.WriteString(setting__20)
 		WriteEscString("Settings", buffer)
-		buffer.WriteString(error__20)
+		buffer.WriteString(setting__21)
 		{
 			var (
 				msgs = meta.Messages
 			)
 
 			if msgs.Length() > 0 {
-				buffer.WriteString(commentlist__73)
+				buffer.WriteString(setting__73)
 				var messages = msgs.Get()
 				for _, msg := range messages {
-					buffer.WriteString(commentlist__75)
+					buffer.WriteString(setting__75)
 					WriteAll(msg.Type, true, buffer)
-					buffer.WriteString(commentlist__50)
+					buffer.WriteString(setting__50)
 					WriteAll(msg.Message, true, buffer)
-					buffer.WriteString(commentlist__77)
+					buffer.WriteString(setting__77)
 				}
-				buffer.WriteString(commentlist__74)
+				buffer.WriteString(setting__74)
 			}
 		}
 
@@ -194,13 +279,13 @@ func UserSetting(user *entities.User) func(meta *entities.Meta, wr *bufio.Writer
 				label = "Username"
 			)
 
-			buffer.WriteString(managepagecompose__85)
+			buffer.WriteString(setting__78)
 			WriteEscString(label, buffer)
-			buffer.WriteString(managepagecompose__86)
+			buffer.WriteString(setting__79)
 			WriteEscString(name, buffer)
-			buffer.WriteString(managepagecompose__87)
+			buffer.WriteString(setting__80)
 			WriteAll(value, true, buffer)
-			buffer.WriteString(managepagecompose__88)
+			buffer.WriteString(setting__81)
 		}
 
 		{
@@ -210,13 +295,13 @@ func UserSetting(user *entities.User) func(meta *entities.Meta, wr *bufio.Writer
 				label = "Display name"
 			)
 
-			buffer.WriteString(managepagecompose__85)
+			buffer.WriteString(setting__78)
 			WriteEscString(label, buffer)
-			buffer.WriteString(managepagecompose__86)
+			buffer.WriteString(setting__79)
 			WriteEscString(name, buffer)
-			buffer.WriteString(managepagecompose__87)
+			buffer.WriteString(setting__80)
 			WriteAll(value, true, buffer)
-			buffer.WriteString(managepagecompose__88)
+			buffer.WriteString(setting__81)
 		}
 
 		{
@@ -226,13 +311,13 @@ func UserSetting(user *entities.User) func(meta *entities.Meta, wr *bufio.Writer
 				label = "Email"
 			)
 
-			buffer.WriteString(managepagecompose__85)
+			buffer.WriteString(setting__78)
 			WriteEscString(label, buffer)
-			buffer.WriteString(managepagecompose__86)
+			buffer.WriteString(setting__79)
 			WriteEscString(name, buffer)
-			buffer.WriteString(managepagecompose__87)
+			buffer.WriteString(setting__80)
 			WriteAll(value, true, buffer)
-			buffer.WriteString(managepagecompose__88)
+			buffer.WriteString(setting__81)
 		}
 
 		{
@@ -242,13 +327,13 @@ func UserSetting(user *entities.User) func(meta *entities.Meta, wr *bufio.Writer
 				label = "Url"
 			)
 
-			buffer.WriteString(managepagecompose__85)
+			buffer.WriteString(setting__78)
 			WriteEscString(label, buffer)
-			buffer.WriteString(managepagecompose__86)
+			buffer.WriteString(setting__79)
 			WriteEscString(name, buffer)
-			buffer.WriteString(managepagecompose__87)
+			buffer.WriteString(setting__80)
 			WriteAll(value, true, buffer)
-			buffer.WriteString(managepagecompose__88)
+			buffer.WriteString(setting__81)
 		}
 
 		{
@@ -258,114 +343,114 @@ func UserSetting(user *entities.User) func(meta *entities.Meta, wr *bufio.Writer
 				label = "Bio"
 			)
 
-			buffer.WriteString(managepagecompose__85)
+			buffer.WriteString(setting__78)
 			WriteEscString(label, buffer)
-			buffer.WriteString(managetopiccompose__87)
+			buffer.WriteString(setting__95)
 			WriteEscString(name, buffer)
-			buffer.WriteString(commentlist__50)
+			buffer.WriteString(setting__50)
 			WriteAll(value, true, buffer)
-			buffer.WriteString(managesettings__98)
+			buffer.WriteString(setting__97)
 		}
 
-		buffer.WriteString(manageusercompose__23)
+		buffer.WriteString(setting__22)
 
 		{
 			var (
 				name  = "password"
-				value = user.Password
+				value = ""
 				label = "Password"
 			)
 
-			buffer.WriteString(managepagecompose__85)
+			buffer.WriteString(setting__78)
 			WriteEscString(label, buffer)
-			buffer.WriteString(managepagecompose__86)
+			buffer.WriteString(setting__79)
 			WriteEscString(name, buffer)
-			buffer.WriteString(managepagecompose__87)
-			WriteAll(value, true, buffer)
-			buffer.WriteString(managepagecompose__88)
+			buffer.WriteString(setting__80)
+			WriteEscString(value, buffer)
+			buffer.WriteString(setting__81)
 		}
 
 		buffer.WriteString(setting__23)
 		WriteAll(user.AvatarElm("auto", "auto", true), false, buffer)
-		buffer.WriteString(manageusercompose__28)
+		buffer.WriteString(setting__24)
 		WriteAll(config.Setting("app_name"), true, buffer)
-		buffer.WriteString(commentlist__25)
+		buffer.WriteString(setting__25)
 
 		if meta.User == nil || meta.User.ID == 0 {
-			buffer.WriteString(commentlist__106)
+			buffer.WriteString(setting__102)
 			WriteAll(utils.Url("/login"), true, buffer)
-			buffer.WriteString(commentlist__107)
+			buffer.WriteString(setting__103)
 			WriteAll(utils.Url("/register"), true, buffer)
-			buffer.WriteString(commentlist__108)
+			buffer.WriteString(setting__104)
 
 		} else {
 			{
-				buffer.WriteString(commentlist__63)
+				buffer.WriteString(setting__63)
 				WriteAll(meta.User.AvatarElm("32", "32", false), false, buffer)
-				buffer.WriteString(commentlist__64)
+				buffer.WriteString(setting__64)
 				WriteAll(meta.User.Url(), true, buffer)
-				buffer.WriteString(commentlist__50)
+				buffer.WriteString(setting__50)
 				WriteAll(meta.User.Name(), true, buffer)
-				buffer.WriteString(commentlist__66)
+				buffer.WriteString(setting__66)
 				WriteAll("@"+meta.User.Username, true, buffer)
-				buffer.WriteString(commentlist__67)
+				buffer.WriteString(setting__67)
 				WriteAll(utils.Url("/posts/new"), true, buffer)
-				buffer.WriteString(commentlist__68)
+				buffer.WriteString(setting__68)
 				WriteAll(utils.Url("/posts"), true, buffer)
-				buffer.WriteString(commentlist__69)
+				buffer.WriteString(setting__69)
 				WriteAll(utils.Url("/comments"), true, buffer)
-				buffer.WriteString(commentlist__70)
+				buffer.WriteString(setting__70)
 				WriteAll(utils.Url("/files"), true, buffer)
-				buffer.WriteString(commentlist__71)
+				buffer.WriteString(setting__71)
 				WriteAll(utils.Url("/settings"), true, buffer)
-				buffer.WriteString(commentlist__72)
+				buffer.WriteString(setting__72)
 
 			}
 
 			if meta.User.IsRoot() {
 				{
-					buffer.WriteString(commentlist__119)
+					buffer.WriteString(setting__115)
 					WriteAll(utils.Url("/manage"), true, buffer)
-					buffer.WriteString(commentlist__120)
+					buffer.WriteString(setting__116)
 					WriteAll(utils.Url("/manage/topics"), true, buffer)
-					buffer.WriteString(commentlist__121)
+					buffer.WriteString(setting__117)
 					WriteAll(utils.Url("/manage/posts"), true, buffer)
-					buffer.WriteString(commentlist__122)
+					buffer.WriteString(setting__118)
 					WriteAll(utils.Url("/manage/pages"), true, buffer)
-					buffer.WriteString(commentlist__123)
+					buffer.WriteString(setting__119)
 					WriteAll(utils.Url("/manage/roles"), true, buffer)
-					buffer.WriteString(commentlist__124)
+					buffer.WriteString(setting__120)
 					WriteAll(utils.Url("/manage/users"), true, buffer)
-					buffer.WriteString(commentlist__125)
+					buffer.WriteString(setting__121)
 					WriteAll(utils.Url("/manage/comments"), true, buffer)
-					buffer.WriteString(commentlist__126)
+					buffer.WriteString(setting__122)
 					WriteAll(utils.Url("/manage/files"), true, buffer)
-					buffer.WriteString(commentlist__127)
+					buffer.WriteString(setting__123)
 					WriteAll(utils.Url("/manage/settings"), true, buffer)
-					buffer.WriteString(commentlist__72)
+					buffer.WriteString(setting__72)
 
 				}
 
 			}
 		}
-		buffer.WriteString(commentlist__26)
+		buffer.WriteString(setting__26)
 
 		for _, topic := range cache.Topics {
-			buffer.WriteString(commentlist__106)
+			buffer.WriteString(setting__102)
 			WriteAll(topic.Url(), true, buffer)
-			buffer.WriteString(commentlist__49)
+			buffer.WriteString(setting__49)
 			WriteAll(topic.Name, true, buffer)
-			buffer.WriteString(commentlist__50)
+			buffer.WriteString(setting__50)
 			WriteAll("#"+topic.Name, true, buffer)
-			buffer.WriteString(commentlist__132)
+			buffer.WriteString(setting__128)
 		}
-		buffer.WriteString(commentlist__27)
+		buffer.WriteString(setting__27)
 		WriteAll(config.Setting("footer_content"), false, buffer)
-		buffer.WriteString(commentlist__28)
+		buffer.WriteString(setting__28)
 		WriteAll(config.Setting("inject_footer"), false, buffer)
 		WriteAll(asset.JsFile("js/layout.js"), false, buffer)
 		WriteAll(asset.JsFile("js/main.js"), false, buffer)
-		buffer.WriteString(error__26)
+		buffer.WriteString(setting__29)
 
 	}
 }
