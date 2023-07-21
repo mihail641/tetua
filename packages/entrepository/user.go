@@ -3,6 +3,7 @@ package entrepository
 import (
 	"context"
 	"fmt"
+	"net/url"
 	"time"
 
 	"github.com/ngocphuongnb/tetua/app/entities"
@@ -25,6 +26,7 @@ func userById(ctx context.Context, client *ent.Client, id int) (*ent.User, error
 }
 
 func (u *UserRepository) ByUsername(ctx context.Context, username string) (*entities.User, error) {
+	username, _ = url.PathUnescape(username)
 	user, err := u.Client.User.
 		Query().
 		Where(user.UsernameEQ(username)).
