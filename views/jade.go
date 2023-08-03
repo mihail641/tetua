@@ -2,8 +2,8 @@
 package views
 
 import (
-	"bufio"
 	"bytes"
+	"bufio"
 	"strconv"
 )
 

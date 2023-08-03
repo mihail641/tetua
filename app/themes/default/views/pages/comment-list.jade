@@ -3,7 +3,7 @@ include ../partials/common.jade
 
 block footer
   !=asset.JsFile('js/main.js')
-  script listenDeleteNodeEvents('comment', '/comments', '/comments')
+  script listenDeleteNodeEvents('comment', '/comments', function(){window.location.reload()} )
 
 block content
   :go:func CommentList(paginate *entities.Paginate[entities.Comment])

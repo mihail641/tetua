@@ -61,6 +61,17 @@ func (c *CommentRepository) PaginateWithPost(ctx context.Context, filters ...*e.
 	}, nil
 }
 
+func (c *CommentRepository) DeleteComment(ctx context.Context, id int, postId int) error {
+	var err error
+	if err := c.Client.Comment.DeleteOneID(id).Exec(ctx); err != nil {
+		return err
+	}
+	if err := c.Client.Post.UpdateOneID(postId).AddCommentCount(-1).Exec(ctx); err != nil {
+		return err
+	}
+	return err
+}
+
 func CreateCommentRepository(client *ent.Client) *CommentRepository {
 	return &CommentRepository{
 		BaseRepository: &BaseRepository[e.Comment, ent.Comment, *ent.CommentQuery, *e.CommentFilter]{
@@ -71,7 +82,8 @@ func CreateCommentRepository(client *ent.Client) *CommentRepository {
 				return client.Comment.Query().Where(comment.IDEQ(id)).WithUser().Only(ctx)
 			},
 			DeleteByIDFn: func(ctx context.Context, client *ent.Client, id int) error {
-				return client.Comment.DeleteOneID(id).Exec(ctx)
+				err := errors.New("There are no implementation")
+				return err
 			},
 			CreateFn: func(ctx context.Context, client *ent.Client, data *e.Comment) (comment *ent.Comment, err error) {
 				if data.UserID == 0 {

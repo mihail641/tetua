@@ -282,6 +282,7 @@ func entCommentToComment(comment *ent.Comment) *entities.Comment {
 		UpdatedAt:   &comment.UpdatedAt,
 		DeletedAt:   &comment.DeletedAt,
 		UserID:      comment.UserID,
+		PostID:      comment.PostID,
 		ParentID:    comment.ParentID,
 		Content:     comment.Content,
 		ContentHTML: comment.ContentHTML,
