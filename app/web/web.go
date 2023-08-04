@@ -71,6 +71,7 @@ var (
 	authCommentDelete = auth.Config(&server.AuthConfig{
 		Action:       "comment.delete",
 		DefaultValue: entities.PERM_OWN,
+		Prepare:      auth.GetComment,
 		OwnCheckFN:   auth.CommentOwnerCheck,
 	})
 

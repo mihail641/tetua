@@ -52,7 +52,12 @@ func Save(c server.Context) (err error) {
 }
 
 func Delete(c server.Context) error {
-	if err := repositories.Comment.DeleteByID(c.Context(), c.ParamInt("id")); err != nil {
+	var postId int
+	if comment, ok := c.Locals("comment").(*entities.Comment); ok {
+		postId = comment.PostID
+	}
+	err := repositories.Comment.DeleteComment(c.Context(), c.ParamInt("id"), postId)
+	if err != nil {
 		c.Logger().Error("Error deleting comment", err)
 		return c.Status(http.StatusBadRequest).Json(&entities.Message{
 			Type:    "error",

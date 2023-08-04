@@ -179,3 +179,7 @@ func (m *CommentRepository) PaginateWithPost(ctx context.Context, filters ...*en
 		Total:       int(math.Ceil(float64(count) / float64(filter.Limit))),
 	}, nil
 }
+
+func (m *CommentRepository) DeleteComment(ctx context.Context, e *entities.Comment, id int, postId int) error {
+	return nil
+}

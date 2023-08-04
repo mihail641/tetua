@@ -10,4 +10,5 @@ type CommentRepository interface {
 	Repository[entities.Comment, entities.CommentFilter]
 	FindWithPost(ctx context.Context, filters ...*entities.CommentFilter) ([]*entities.Comment, error)
 	PaginateWithPost(ctx context.Context, filters ...*entities.CommentFilter) (*entities.Paginate[entities.Comment], error)
+	DeleteComment(ctx context.Context, id int, postId int) error
 }

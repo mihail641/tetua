@@ -4,6 +4,7 @@ include ../partials/common.jade
 block footer
   !=asset.JsFile('editor/highlight-11.5.0.min.js')
   !=asset.JsFile('js/main.js')
+   script listenDeleteNodeEvents('comment', '/comments', function(){window.location.reload()})
 
 block content
   :go:func PostView(post *entities.Post, relatedPosts []*entities.Post, comments []*entities.Comment)

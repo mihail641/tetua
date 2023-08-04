@@ -43,7 +43,7 @@ const (
 	commentlist__26  = `<strong>Topics</strong><div class="menu-topics">`
 	commentlist__27  = `</div></div></div><div class="overlay menu-trigger"></div><footer><div class="container"><div>`
 	commentlist__28  = `</div><p>Proudly powered by <a href="https://tetua.net" title="Tetua - CMS Platform for Blogging">Tetua</a></p></div></footer>`
-	commentlist__29  = `<script>listenDeleteNodeEvents('comment', '/comments', '/comments')</script></body></html>`
+	commentlist__29  = `<script>listenDeleteNodeEvents('comment', '/comments', function(){window.location.reload()} )</script></body></html>`
 	commentlist__30  = `<link rel="icon" type="image/png" href="`
 	commentlist__31  = `"/><link rel="apple-touch-icon" href="`
 	commentlist__33  = `<meta name="description" content="`
