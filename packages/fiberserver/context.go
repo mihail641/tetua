@@ -4,10 +4,6 @@ import (
 	"bufio"
 	"context"
 	"fmt"
-	"mime/multipart"
-	"runtime"
-	"strconv"
-
 	"github.com/gofiber/fiber/v2"
 	fiberUtils "github.com/gofiber/utils"
 	"github.com/ngocphuongnb/tetua/app/config"
@@ -16,6 +12,9 @@ import (
 	"github.com/ngocphuongnb/tetua/app/server"
 	"github.com/ngocphuongnb/tetua/app/utils"
 	"github.com/valyala/fasthttp"
+	"mime/multipart"
+	"runtime"
+	"strconv"
 )
 
 type Context struct {
@@ -276,4 +275,7 @@ func (r *Response) Header(key string, vals ...string) string {
 	}
 
 	return string(r.Response.Header.Peek(key))
+}
+func (c *Context) Referer() string {
+	return c.Get(fiber.HeaderReferer)
 }

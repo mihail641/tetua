@@ -1,7 +1,6 @@
 package webcomment
 
 import (
-	"fmt"
 	"net/http"
 
 	"github.com/ngocphuongnb/tetua/app/entities"
@@ -30,8 +29,6 @@ func List(c server.Context) error {
 
 func Save(c server.Context) (err error) {
 	data := getCommentSaveData(c)
-	postID := data.PostID
-
 	if c.Messages().HasError() {
 		return c.Status(http.StatusBadRequest).Json(c.Messages())
 	}
@@ -39,16 +36,15 @@ func Save(c server.Context) (err error) {
 	if data.ID == 0 {
 		data.UserID = c.User().ID
 		data, err = repositories.Comment.Create(c.Context(), data)
+
 	} else {
 		data, err = repositories.Comment.Update(c.Context(), data)
 	}
-
 	if err != nil {
 		c.WithError("Error saving comment", err)
 		return c.Status(http.StatusInternalServerError).SendString("Error saving comment")
 	}
-
-	return c.Redirect(fmt.Sprintf("/post-%d.html#comment-%d", postID, data.ID))
+	return c.Redirect(c.Referer())
 }
 
 func Delete(c server.Context) error {
