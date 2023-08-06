@@ -130,7 +130,7 @@ func CreatePostRepository(client *ent.Client) *PostRepository {
 				query := client.Post.Query().Where(post.DeletedAtIsNil())
 				publish := "published"
 				approved := "approved"
-
+				search := ""
 				if len(filters) > 0 {
 					if filters[0].Publish != "" {
 						publish = filters[0].Publish
@@ -149,6 +149,10 @@ func CreatePostRepository(client *ent.Client) *PostRepository {
 
 					if len(filters[0].ExcludeIDs) > 0 {
 						query = query.Where(post.IDNotIn(filters[0].ExcludeIDs...))
+					}
+					if filters[0].Search != "" {
+						search = filters[0].Search
+
 					}
 				}
 
@@ -170,6 +174,12 @@ func CreatePostRepository(client *ent.Client) *PostRepository {
 					if approved == "pending" {
 						query = query.Where(post.Approved(false))
 					}
+				}
+				if search != "" {
+					query = query.Where(post.Or(
+						post.NameContains(search),
+						post.ContentContains(search),
+					))
 				}
 
 				return query
