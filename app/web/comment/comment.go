@@ -30,9 +30,8 @@ func List(c server.Context) error {
 func Save(c server.Context) (err error) {
 	data := getCommentSaveData(c)
 	if c.Messages().HasError() {
-		return c.Status(http.StatusBadRequest).Json(c.Messages())
+		return c.Status(http.StatusBadRequest).Render(views.Message("", "", c.Referer(), 2))
 	}
-
 	if data.ID == 0 {
 		data.UserID = c.User().ID
 		data, err = repositories.Comment.Create(c.Context(), data)
@@ -40,6 +39,7 @@ func Save(c server.Context) (err error) {
 	} else {
 		data, err = repositories.Comment.Update(c.Context(), data)
 	}
+
 	if err != nil {
 		c.WithError("Error saving comment", err)
 		return c.Status(http.StatusInternalServerError).SendString("Error saving comment")
@@ -91,7 +91,7 @@ func getCommentSaveData(c server.Context) *entities.Comment {
 	}
 
 	if data.Content == "" {
-		c.Messages().AppendError("Content is required")
+		c.Messages().AppendError("The comment required text length at least 1 characters")
 	}
 
 	comment := &entities.Comment{
