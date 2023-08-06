@@ -83,6 +83,7 @@ type Context interface {
 	Context() context.Context
 	File(name string) (*multipart.FileHeader, error)
 	WithError(msg string, err error)
+	Referer() string
 }
 
 type Handler func(c Context) error
