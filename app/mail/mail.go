@@ -3,14 +3,17 @@ package mail
 import (
 	"crypto/tls"
 	"fmt"
+	"github.com/ngocphuongnb/tetua/app/config"
+	"github.com/ngocphuongnb/tetua/app/logger"
+	"github.com/ngocphuongnb/tetua/app/server"
 	"mime"
 	"net/mail"
 	"net/smtp"
-
-	"github.com/ngocphuongnb/tetua/app/config"
 )
 
-func Send(receiverName, receiverAddress, subject, body string) error {
+func Send(c server.Context, receiverName, receiverAddress, subject, body string) error {
+	var err error
+
 	if config.Mail == nil ||
 		config.Mail.Sender == "" ||
 		config.Mail.Smtp == nil ||
@@ -18,8 +21,19 @@ func Send(receiverName, receiverAddress, subject, body string) error {
 		config.Mail.Smtp.Port == 0 ||
 		config.Mail.Smtp.User == "" ||
 		config.Mail.Smtp.Pass == "" {
+
 		return fmt.Errorf("Mail config is not set")
 	}
+	go func() {
+		err = send(receiverName, receiverAddress, subject, body)
+		if err != nil {
+			logger.Get().WithContext(logger.Context{"request_id": c.RequestID()}).Error(err)
+		}
+	}()
+	return err
+}
+
+func send(receiverName, receiverAddress, subject, body string) error {
 
 	from := mail.Address{
 		Name:    config.Setting("app_name"),
@@ -76,8 +90,8 @@ func Send(receiverName, receiverAddress, subject, body string) error {
 	if err = w.Close(); err != nil {
 		return err
 	}
-
-	client.Quit()
-
-	return nil
+	if err = client.Quit(); err != nil {
+		return err
+	}
+	return err
 }
