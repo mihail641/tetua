@@ -73,7 +73,7 @@ func Register(c server.Context) (err error) {
 func PostRegister(c server.Context) (err error) {
 	register := &RegisterData{}
 	autoApproveUser := config.Setting("auto_approve_user") == "yes"
-
+	messageError := "Your account has been created. But we can't send you an email to activate your account. "
 	if err = register.Parse(c); err != nil {
 		c.Messages().AppendError(err.Error())
 		return c.Render(views.Register(register.Username, register.Email))
@@ -105,10 +105,9 @@ func PostRegister(c server.Context) (err error) {
 		welcomeMessage = "Your account has been created. We've sent you an email to activate your account, please check your mailbox."
 		exp := time.Now().Add(time.Hour * 24)
 		activationCode, err := utils.Encrypt(fmt.Sprintf("%d_%d", user.ID, exp.UnixMicro()))
-
 		if err != nil {
 			logger.Error(err)
-			welcomeMessage = "Your account has been created. But we can't send you an email to activate your account, "
+			welcomeMessage = messageError
 			welcomeMessage += "please contact us with your username/email and this trace id: " + c.RequestID()
 		}
 
@@ -119,17 +118,18 @@ func PostRegister(c server.Context) (err error) {
 		)
 	}
 
-	go func(user *entities.User, requestID string) {
-		mailBody = append(mailBody, fmt.Sprintf("<br><b>Cheer</b>,<br>The %s Team", config.Setting("app_name")))
-		if err := mail.Send(
-			user.Username,
-			user.Email,
-			fmt.Sprintf("Welcome to %s", config.Setting("app_name")),
-			strings.Join(mailBody, "<br>"),
-		); err != nil {
-			logger.Get().WithContext(logger.Context{"request_id": requestID}).Error(err)
-		}
-	}(user, c.RequestID())
+	mailBody = append(mailBody, fmt.Sprintf("<br><b>Cheer</b>,<br>The %s Team", config.Setting("app_name")))
+	err = mail.Send(c,
+		user.Username,
+		user.Email,
+		fmt.Sprintf("Welcome to %s", config.Setting("app_name")),
+		strings.Join(mailBody, "<br>"),
+	)
+
+	if err != nil {
+		logger.Get().WithContext(logger.Context{"request_id": c.RequestID()}).Error(err)
+		return c.Render(views.Message("Thank you for signing up", messageError, "", 0))
+	}
 
 	return c.Render(views.Message("Thank you for signing up", welcomeMessage, "", 0))
 }

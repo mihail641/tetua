@@ -12,3 +12,4 @@ dist/
 views
 .idea
 node_modules/
+config.json
