@@ -11,6 +11,20 @@ import (
 	"net/smtp"
 )
 
+//channel for recording messages for sending
+var messageQueue = make(chan letterInfo)
+
+//letterInfo struct for recording letters
+type letterInfo struct {
+	receiverName    string
+	receiverAddress string
+	subject         string
+	body            string
+	request         string
+}
+
+//Send check config -file and returning error if it is empty, calls the goroutine that wrires
+//letterInfo struct in chanel messageQueue
 func Send(c server.Context, receiverName, receiverAddress, subject, body string) error {
 	var err error
 
@@ -25,23 +39,37 @@ func Send(c server.Context, receiverName, receiverAddress, subject, body string)
 		return fmt.Errorf("Mail config is not set")
 	}
 	go func() {
-		err = send(receiverName, receiverAddress, subject, body)
-		if err != nil {
-			logger.Get().WithContext(logger.Context{"request_id": c.RequestID()}).Error(err)
+		letter := letterInfo{
+			receiverName:    receiverName,
+			receiverAddress: receiverAddress,
+			subject:         subject,
+			body:            body,
+			request:         c.RequestID(),
 		}
+		messageQueue <- letter
 	}()
 	return err
 }
 
-func send(receiverName, receiverAddress, subject, body string) error {
+//startMessageSender-checks chanel messageQueue and takes struct letterInfo
+func startMessageSender() {
+	for message := range messageQueue {
+		err := sendLetter(message)
+		if err != nil {
+			logger.Get().Error("request_id:", message.request, err)
+		}
+	}
+}
 
+//sendLetter sends letter to new users
+func sendLetter(letter letterInfo) error {
 	from := mail.Address{
 		Name:    config.Setting("app_name"),
 		Address: config.Mail.Sender,
 	}
 	to := mail.Address{
-		Name:    receiverName,
-		Address: receiverAddress,
+		Name:    letter.receiverName,
+		Address: letter.receiverAddress,
 	}
 	tlsconfig := &tls.Config{
 		InsecureSkipVerify: config.DEVELOPMENT,
@@ -50,9 +78,9 @@ func send(receiverName, receiverAddress, subject, body string) error {
 
 	message := fmt.Sprintf("%s: %s\r\n", "From", from.String())
 	message += fmt.Sprintf("%s: %s\r\n", "To", to.String())
-	message += fmt.Sprintf("%s: %s\r\n", "Subject", mime.QEncoding.Encode("UTF-8", subject))
+	message += fmt.Sprintf("%s: %s\r\n", "Subject", mime.QEncoding.Encode("UTF-8", letter.subject))
 	message += "MIME-version: 1.0;\nContent-Type: text/html; charset=\"UTF-8\";\r\n"
-	message += "\r\n" + body
+	message += "\r\n" + letter.body
 	auth := smtp.PlainAuth("", config.Mail.Smtp.User, config.Mail.Smtp.Pass, config.Mail.Smtp.Host)
 	address := fmt.Sprintf("%s:%d", config.Mail.Smtp.Host, config.Mail.Smtp.Port)
 
@@ -65,7 +93,7 @@ func send(receiverName, receiverAddress, subject, body string) error {
 	if err != nil {
 		return err
 	}
-
+	defer client.Quit()
 	if err = client.Auth(auth); err != nil {
 		return err
 	}
@@ -90,8 +118,10 @@ func send(receiverName, receiverAddress, subject, body string) error {
 	if err = w.Close(); err != nil {
 		return err
 	}
-	if err = client.Quit(); err != nil {
-		return err
-	}
-	return err
+	return nil
+}
+
+//initiates the startMessageSender goroutine when the first user registers in the application for the first time
+func init() {
+	go startMessageSender()
 }
