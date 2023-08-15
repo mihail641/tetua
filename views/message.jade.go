@@ -5,6 +5,7 @@ package views
 import (
 	"bufio"
 	"fmt"
+	"net/url"
 
 	"github.com/ngocphuongnb/tetua/app/asset"
 	"github.com/ngocphuongnb/tetua/app/cache"
@@ -29,6 +30,7 @@ func Message(title, content, redirectUrl string, timeout int) func(meta *entitie
 		var title = meta.GetTitle()
 		var appName = config.Setting("app_name")
 		var appLogo = config.Setting("app_logo")
+		var encodeRequestURL = url.QueryEscape(meta.RequestURL)
 		buffer.WriteString(commentlist__1)
 		WriteAll(title, true, buffer)
 		buffer.WriteString(commentlist__2)
@@ -102,9 +104,9 @@ func Message(title, content, redirectUrl string, timeout int) func(meta *entitie
 
 		if meta.User == nil || meta.User.ID == 0 {
 			buffer.WriteString(commentlist__44)
-			WriteAll(utils.Url("/login"), true, buffer)
+			WriteAll(utils.Url("/login?redirectURL="+encodeRequestURL), true, buffer)
 			buffer.WriteString(commentlist__45)
-			WriteAll(utils.Url("/register"), true, buffer)
+			WriteAll(utils.Url("/register?redirectURL="+encodeRequestURL), true, buffer)
 			buffer.WriteString(commentlist__46)
 
 		} else {
@@ -140,7 +142,7 @@ func Message(title, content, redirectUrl string, timeout int) func(meta *entitie
 			buffer.WriteString(commentlist__54)
 			WriteAll(utils.Url("/settings"), true, buffer)
 			buffer.WriteString(commentlist__55)
-			WriteAll(utils.Url("/logout"), true, buffer)
+			WriteAll(utils.Url("/logout?redirectURL="+encodeRequestURL), true, buffer)
 			buffer.WriteString(commentlist__56)
 
 		}
@@ -181,9 +183,9 @@ func Message(title, content, redirectUrl string, timeout int) func(meta *entitie
 
 		if meta.User == nil || meta.User.ID == 0 {
 			buffer.WriteString(commentlist__106)
-			WriteAll(utils.Url("/login"), true, buffer)
+			WriteAll(utils.Url("/login?redirectURL="+encodeRequestURL), true, buffer)
 			buffer.WriteString(commentlist__107)
-			WriteAll(utils.Url("/register"), true, buffer)
+			WriteAll(utils.Url("/register?redirectURL="+encodeRequestURL), true, buffer)
 			buffer.WriteString(commentlist__108)
 
 		} else {
