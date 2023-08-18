@@ -3,6 +3,7 @@ package webuser
 import (
 	"errors"
 	"fmt"
+	"github.com/ngocphuongnb/tetua/app/url_utils"
 	"strings"
 	"time"
 
@@ -61,22 +62,25 @@ func (r *RegisterData) Parse(c server.Context) error {
 
 	return nil
 }
-
 func Register(c server.Context) (err error) {
+	redirectURL := url_utils.GetRedirectURL(c)
 	if c.User() != nil && c.User().ID > 0 {
-		return c.Redirect(utils.Url(""))
+		return c.Redirect(redirectURL)
 	}
 	c.Meta().Title = "Register"
-	return c.Render(views.Register("", ""))
+
+	return c.Render(views.Register("", "", ""))
 }
 
 func PostRegister(c server.Context) (err error) {
+	redirectURL := url_utils.GetRedirectURL(c)
+
 	register := &RegisterData{}
 	autoApproveUser := config.Setting("auto_approve_user") == "yes"
 	messageError := "Your account has been created. But we can't send you an email to activate your account. "
 	if err = register.Parse(c); err != nil {
 		c.Messages().AppendError(err.Error())
-		return c.Render(views.Register(register.Username, register.Email))
+		return c.Render(views.Register(register.Username, register.Email, ""))
 	}
 
 	user, err := repositories.User.Create(c.Context(), &entities.User{
@@ -90,7 +94,7 @@ func PostRegister(c server.Context) (err error) {
 
 	if err != nil {
 		c.WithError("Something went wrong", err)
-		return c.Render(views.Register(register.Username, register.Email))
+		return c.Render(views.Register(register.Username, register.Email, redirectURL))
 	}
 
 	mailBody := []string{fmt.Sprintf("Welcome <b>%s</b>, We're happy to have you with us.", user.Username)}
@@ -128,8 +132,8 @@ func PostRegister(c server.Context) (err error) {
 
 	if err != nil {
 		logger.Get().WithContext(logger.Context{"request_id": c.RequestID()}).Error(err)
-		return c.Render(views.Message("Thank you for signing up", messageError, "", 0))
+		return c.Render(views.Message("Thank you for signing up", messageError, redirectURL, 0))
 	}
 
-	return c.Render(views.Message("Thank you for signing up", welcomeMessage, "", 0))
+	return c.Render(views.Message("Thank you for signing up", welcomeMessage, redirectURL, 0))
 }

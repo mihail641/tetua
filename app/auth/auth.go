@@ -72,7 +72,7 @@ func SetLoginInfo(c server.Context, user *entities.User) error {
 		Expires:  exp,
 		HTTPOnly: false,
 		SameSite: "lax",
-		Secure:   true,
+		Secure:   false,
 	})
 
 	return nil

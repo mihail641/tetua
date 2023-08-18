@@ -4,6 +4,7 @@ package views
 
 import (
 	"bufio"
+	"net/url"
 
 	"github.com/ngocphuongnb/tetua/app/asset"
 	"github.com/ngocphuongnb/tetua/app/cache"
@@ -19,7 +20,7 @@ const (
 	register__23 = `"/></p><p><label class="required">Password</label><input type="password" name="password" placeholder="Password"/></p><p><label class="required">Password confirmation</label><input type="password" name="passwordconfirmation" placeholder="Password confirmation"/></p><div><button class="btn btn-primary" type="submit" style="background: #313131">Register</button>&nbsp;&nbsp;<a href="#">Login</a></div></form></div></div><div class="right"></div></div></div><div class="mobile-menu"><div class="menu-head">`
 )
 
-func Register(username, email string) func(meta *entities.Meta, wr *bufio.Writer) {
+func Register(username, email, requestURL string) func(meta *entities.Meta, wr *bufio.Writer) {
 	return func(meta *entities.Meta, wr *bufio.Writer) {
 		buffer := &WriterAsBuffer{wr}
 
@@ -28,6 +29,7 @@ func Register(username, email string) func(meta *entities.Meta, wr *bufio.Writer
 		var title = meta.GetTitle()
 		var appName = config.Setting("app_name")
 		var appLogo = config.Setting("app_logo")
+		var encodeRequestURL = url.QueryEscape(meta.RequestURL)
 		buffer.WriteString(commentlist__1)
 		WriteAll(title, true, buffer)
 		buffer.WriteString(commentlist__2)
@@ -101,9 +103,9 @@ func Register(username, email string) func(meta *entities.Meta, wr *bufio.Writer
 
 		if meta.User == nil || meta.User.ID == 0 {
 			buffer.WriteString(commentlist__44)
-			WriteAll(utils.Url("/login"), true, buffer)
+			WriteAll(utils.Url("/login?redirectURL="+encodeRequestURL), true, buffer)
 			buffer.WriteString(commentlist__45)
-			WriteAll(utils.Url("/register"), true, buffer)
+			WriteAll(utils.Url("/register?redirectURL="+encodeRequestURL), true, buffer)
 			buffer.WriteString(commentlist__46)
 
 		} else {
@@ -139,7 +141,7 @@ func Register(username, email string) func(meta *entities.Meta, wr *bufio.Writer
 			buffer.WriteString(commentlist__54)
 			WriteAll(utils.Url("/settings"), true, buffer)
 			buffer.WriteString(commentlist__55)
-			WriteAll(utils.Url("/logout"), true, buffer)
+			WriteAll(utils.Url("/logout?redirectURL="+encodeRequestURL), true, buffer)
 			buffer.WriteString(commentlist__56)
 
 		}
@@ -165,7 +167,7 @@ func Register(username, email string) func(meta *entities.Meta, wr *bufio.Writer
 		}
 
 		buffer.WriteString(login__20)
-		WriteAll(utils.Url("/register"), true, buffer)
+		WriteEscString(requestURL, buffer)
 		buffer.WriteString(register__21)
 		WriteEscString(username, buffer)
 		buffer.WriteString(register__22)
@@ -176,9 +178,9 @@ func Register(username, email string) func(meta *entities.Meta, wr *bufio.Writer
 
 		if meta.User == nil || meta.User.ID == 0 {
 			buffer.WriteString(commentlist__106)
-			WriteAll(utils.Url("/login"), true, buffer)
+			WriteAll(utils.Url("/login?redirectURL="+encodeRequestURL), true, buffer)
 			buffer.WriteString(commentlist__107)
-			WriteAll(utils.Url("/register"), true, buffer)
+			WriteAll(utils.Url("/register?redirectURL="+encodeRequestURL), true, buffer)
 			buffer.WriteString(commentlist__108)
 
 		} else {

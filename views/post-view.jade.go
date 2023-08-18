@@ -5,6 +5,7 @@ package views
 import (
 	"bufio"
 	"fmt"
+	"net/url"
 
 	"github.com/ngocphuongnb/tetua/app/asset"
 	"github.com/ngocphuongnb/tetua/app/cache"
@@ -14,247 +15,140 @@ import (
 )
 
 const (
-	postview__0   = `<!DOCTYPE html><html lang="en">`
-	postview__1   = `<head><meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/><title>`
-	postview__2   = `</title><meta name="keywords" content="software development, devloper community"/><link rel="canonical" href="`
-	postview__3   = `"/><meta property="og:type" content="`
-	postview__4   = `"/><meta property="og:url" content="`
-	postview__5   = `"/><meta property="og:title" content="`
-	postview__6   = `"/><meta property="og:site_name" content="`
-	postview__7   = `"/><meta name="twitter:site" content="`
-	postview__8   = `"/><meta name="twitter:title" content="`
-	postview__9   = `"/><meta name="twitter:card" content="summary_large_image"/><meta name="apple-mobile-web-app-title" content="`
-	postview__10  = `"/><meta name="application-name" content="`
-	postview__11  = `"/><link rel="alternate" type="application/rss+xml" title="`
-	postview__12  = `" href="`
-	postview__13  = `"/>`
-	postview__14  = `</head><body><header><nav class="main container"><a class="logo" href="`
-	postview__15  = `" title="Home">`
-	postview__16  = `</a><form class="search-form" method="get" action="/search" accept-charset="UTF-8"><input class="search-input" type="text" name="q" placeholder="Search..." autocomplete="off" value="`
-	postview__17  = `"/><button class="search-btn" type="submit" aria-label="Search"><svg viewBox="0 0 24 24"><path fill="currentColor" d="M9.5,3A6.5,6.5 0 0,1 16,9.5C16,11.11 15.41,12.59 14.44,13.73L14.71,14H15.5L20.5,19L19,20.5L14,15.5V14.71L13.73,14.44C12.59,15.41 11.11,16 9.5,16A6.5,6.5 0 0,1 3,9.5A6.5,6.5 0 0,1 9.5,3M9.5,5C7,5 5,7 5,9.5C5,12 7,14 9.5,14C12,14 14,12 14,9.5C14,7 12,5 9.5,5Z"></path></svg></button></form><ul><li class="search-mobile"><a href="`
-	postview__18  = `"><svg viewBox="0 0 24 24"><path fill="currentColor" d="M9.5,3A6.5,6.5 0 0,1 16,9.5C16,11.11 15.41,12.59 14.44,13.73L14.71,14H15.5L20.5,19L19,20.5L14,15.5V14.71L13.73,14.44C12.59,15.41 11.11,16 9.5,16A6.5,6.5 0 0,1 3,9.5A6.5,6.5 0 0,1 9.5,3M9.5,5C7,5 5,7 5,9.5C5,12 7,14 9.5,14C12,14 14,12 14,9.5C14,7 12,5 9.5,5Z"></path></svg></a></li>`
-	postview__19  = `</ul><label class="menu-trigger"><svg viewBox="0 0 24 24"><path fill="currentColor" d="M3,6H21V8H3V6M3,11H21V13H3V11M3,16H21V18H3V16Z"></path></svg></label></nav></header><div class="wrapper"><div class="container"><div class="layout two-right"><div class="main">`
-	postview__20  = `<article class="box full detail">`
-	postview__21  = `<div class="box-content">`
-	postview__22  = `<h1 class="post-name">`
-	postview__23  = `</h1><div class="tags">`
-	postview__24  = `</div>`
-	postview__25  = `<hr/><h2>`
-	postview__26  = `</h2><div class="comments"><div class="flex">`
-	postview__27  = `<div><form method="post" action="/comments/new"><input type="hidden" name="post_id" value="`
-	postview__28  = `"/><textarea name="content" placeholder="Write your comment here..."></textarea><button type="submit">Comment</button></form></div></div>`
-	postview__29  = `</div></div></article></div><div class="right"><div class="box fixed-sidebar"><h2>Trending posts</h2><div class="posts-list">`
-	postview__30  = `</div></div></div></div></div><div class="mobile-menu"><div class="menu-head">`
-	postview__31  = `<label class="menu-trigger menu-close"><svg viewBox="0 0 24 24"><path fill="currentColor" d="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z"></path></svg></label></div>`
-	postview__32  = `<strong>Topics</strong><div class="menu-topics">`
-	postview__33  = `</div></div></div><div class="overlay menu-trigger"></div><footer><div class="container"><div>`
-	postview__34  = `</div><p>Proudly powered by <a href="https://tetua.net" title="Tetua - CMS Platform for Blogging">Tetua</a></p></div></footer>`
-	postview__35  = `<script>listenDeleteNodeEvents('comment', '/comments', function(){window.location.reload()})</script></body></html>`
-	postview__36  = `<link rel="icon" type="image/png" href="`
-	postview__37  = `"/><link rel="apple-touch-icon" href="`
-	postview__39  = `<meta name="description" content="`
-	postview__40  = `"/><meta property="og:description" content="`
-	postview__41  = `"/><meta name="twitter:description" content="`
-	postview__43  = `<meta property="og:image" content="`
-	postview__44  = `"/><meta name="twitter:image:src" content="`
-	postview__46  = `<img src="`
-	postview__47  = `" alt="`
-	postview__49  = `<svg viewBox="0 0 24 24"><path fill="#164e63" d="M11,6.5V9.33L8.33,12L11,14.67V17.5L5.5,12M13,6.43L18.57,12L13,17.57V14.74L15.74,12L13,9.26M5,3C3.89,3 3,3.9 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V5A2,2 0 0,0 19,3H5Z"></path></svg>`
-	postview__50  = `<li><a href="`
-	postview__51  = `">Login</a></li><li><a href="`
-	postview__52  = `">Register</a></li>`
-	postview__54  = `">New</a></li><li><div class="user-menu"><a href="`
-	postview__55  = `" title="`
-	postview__56  = `">`
-	postview__57  = `</a><svg viewBox="0 0 24 24"><path fill="currentColor" d="M7.41,8.58L12,13.17L16.59,8.58L18,10L12,16L6,10L7.41,8.58Z"></path></svg><ul class="sub">`
-	postview__59  = `">Profile</a></li><li><a href="`
-	postview__60  = `">Posts</a></li><li><a href="`
-	postview__61  = `">Setting</a></li><li><a href="`
-	postview__62  = `">Logout</a></li></ul></div></li>`
-	postview__63  = `<img class="avatar" src="`
-	postview__66  = `<span class="avatar none"></span>`
-	postview__68  = `">Manage</a></li>`
-	postview__69  = `<ul class="messages">`
-	postview__70  = `</ul>`
-	postview__71  = `<li class="`
-	postview__73  = `</li>`
-	postview__74  = `<div class="bg"><img class="featured-image" src="`
-	postview__76  = `"/></div>`
-	postview__77  = `<div class="meta flex">`
-	postview__78  = `<div><a class="author" href="`
-	postview__81  = `</a><div class="stat flex"><time datetime="`
-	postview__82  = `" class="date">`
-	postview__83  = `</time><span class="views">`
-	postview__84  = `</span><span class="comment">`
-	postview__85  = `</span></div></div></div>`
-	postview__86  = `<a href="`
-	postview__88  = `</a>`
-	postview__89  = `<div class="comment box flex" id="`
-	postview__93  = `</a>&nbsp;&nbsp;<span class="date">`
-	postview__94  = `</span><div class="content">`
-	postview__96  = `</div></div>`
-	postview__97  = `<h4 style="margin:0 0 10px"><a href="`
-	postview__98  = `" target="_blank">`
-	postview__99  = `</a></h4>`
-	postview__100 = `<div class="actions"><a class="edit-comment" href="#" data-id="`
-	postview__101 = `">Edit</a>&nbsp;&nbsp;<a class="delete-comment" href="#" data-id="`
-	postview__102 = `">Delete</a>`
-	postview__104 = `&nbsp;&nbsp;<a class="view-comment" href="`
-	postview__105 = `" target="_blank">View</a>`
-	postview__106 = `&nbsp;&nbsp;<a class="post-comments" href="`
-	postview__107 = `">All Post comments</a>&nbsp;&nbsp;<a class="post-comments" href="`
-	postview__108 = `">All User comments</a>`
-	postview__109 = `<form method="post" action="`
-	postview__110 = `"><input type="hidden" name="post_id" value="`
-	postview__111 = `"/><textarea name="content" placeholder="Write your comment here...">`
-	postview__112 = `</textarea><button type="submit">Update</button></form>`
-	postview__113 = `<article><h4>`
-	postview__117 = `</a></h4><div class="tags">`
-	postview__118 = `</div></article>`
-	postview__119 = `<span class="pos">`
-	postview__120 = `</span>`
-	postview__126 = `">Login</a><a href="`
-	postview__127 = `">Register</a>`
-	postview__131 = `</a><div class="stat flex"><span>`
-	postview__132 = `</span></div></div></div><ul class="manage-features"><li><a href="`
-	postview__133 = `"><svg style="width:24px;height:24px" viewBox="0 0 24 24"><path fill="currentColor" d="M12,20C7.59,20 4,16.41 4,12C4,7.59 7.59,4 12,4C16.41,4 20,7.59 20,12C20,16.41 16.41,20 12,20M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M13,7H11V11H7V13H11V17H13V13H17V11H13V7Z"></path></svg>New post</a></li><li><a href="`
-	postview__134 = `"><svg viewBox="0 0 24 24"><path fill="currentColor" d="M20 5L20 19L4 19L4 5H20M20 3H4C2.89 3 2 3.89 2 5V19C2 20.11 2.89 21 4 21H20C21.11 21 22 20.11 22 19V5C22 3.89 21.11 3 20 3M18 15H6V17H18V15M10 7H6V13H10V7M12 9H18V7H12V9M18 11H12V13H18V11Z"></path></svg>My Posts</a></li><li><a href="`
-	postview__135 = `"><svg viewBox="0 0 24 24"><path fill="currentColor" d="M20 2H4C2.9 2 2 2.9 2 4V22L6 18H20C21.1 18 22 17.1 22 16V4C22 2.9 21.1 2 20 2M20 16H5.2L4 17.2V4H20V16Z"></path></svg>My Comments</a></li><li><a href="`
-	postview__136 = `"><svg viewBox="0 0 24 24"><path fill="currentColor" d="M21,17H7V3H21M21,1H7A2,2 0 0,0 5,3V17A2,2 0 0,0 7,19H21A2,2 0 0,0 23,17V3A2,2 0 0,0 21,1M3,5H1V21A2,2 0 0,0 3,23H19V21H3M15.96,10.29L13.21,13.83L11.25,11.47L8.5,15H19.5L15.96,10.29Z"></path></svg>My Files</a></li><li><a href="`
-	postview__137 = `"><svg viewBox="0 0 24 24"><path fill="currentColor" d="M12,8A4,4 0 0,1 16,12A4,4 0 0,1 12,16A4,4 0 0,1 8,12A4,4 0 0,1 12,8M12,10A2,2 0 0,0 10,12A2,2 0 0,0 12,14A2,2 0 0,0 14,12A2,2 0 0,0 12,10M10,22C9.75,22 9.54,21.82 9.5,21.58L9.13,18.93C8.5,18.68 7.96,18.34 7.44,17.94L4.95,18.95C4.73,19.03 4.46,18.95 4.34,18.73L2.34,15.27C2.21,15.05 2.27,14.78 2.46,14.63L4.57,12.97L4.5,12L4.57,11L2.46,9.37C2.27,9.22 2.21,8.95 2.34,8.73L4.34,5.27C4.46,5.05 4.73,4.96 4.95,5.05L7.44,6.05C7.96,5.66 8.5,5.32 9.13,5.07L9.5,2.42C9.54,2.18 9.75,2 10,2H14C14.25,2 14.46,2.18 14.5,2.42L14.87,5.07C15.5,5.32 16.04,5.66 16.56,6.05L19.05,5.05C19.27,4.96 19.54,5.05 19.66,5.27L21.66,8.73C21.79,8.95 21.73,9.22 21.54,9.37L19.43,11L19.5,12L19.43,13L21.54,14.63C21.73,14.78 21.79,15.05 21.66,15.27L19.66,18.73C19.54,18.95 19.27,19.04 19.05,18.95L16.56,17.95C16.04,18.34 15.5,18.68 14.87,18.93L14.5,21.58C14.46,21.82 14.25,22 14,22H10M11.25,4L10.88,6.61C9.68,6.86 8.62,7.5 7.85,8.39L5.44,7.35L4.69,8.65L6.8,10.2C6.4,11.37 6.4,12.64 6.8,13.8L4.68,15.36L5.43,16.66L7.86,15.62C8.63,16.5 9.68,17.14 10.87,17.38L11.24,20H12.76L13.13,17.39C14.32,17.14 15.37,16.5 16.14,15.62L18.57,16.66L19.32,15.36L17.2,13.81C17.6,12.64 17.6,11.37 17.2,10.2L19.31,8.65L18.56,7.35L16.15,8.39C15.38,7.5 14.32,6.86 13.12,6.62L12.75,4H11.25Z"></path></svg>Settings</a></li></ul>`
-	postview__138 = `<h2 class="header"><a href="`
-	postview__139 = `">Manage</a></h2><ul class="manage-features"><li><a href="`
-	postview__140 = `"><svg viewBox="0 0 24 24"><path fill="currentColor" d="M9,1H19A2,2 0 0,1 21,3V19L19,18.13V3H7A2,2 0 0,1 9,1M15,20V7H5V20L10,17.82L15,20M15,5C16.11,5 17,5.9 17,7V23L10,20L3,23V7A2,2 0 0,1 5,5H15Z"></path></svg>Topics</a></li><li><a href="`
-	postview__141 = `"><svg viewBox="0 0 24 24"><path fill="currentColor" d="M20 5L20 19L4 19L4 5H20M20 3H4C2.89 3 2 3.89 2 5V19C2 20.11 2.89 21 4 21H20C21.11 21 22 20.11 22 19V5C22 3.89 21.11 3 20 3M18 15H6V17H18V15M10 7H6V13H10V7M12 9H18V7H12V9M18 11H12V13H18V11Z"></path></svg>Posts</a></li><li><a href="`
-	postview__142 = `"><svg viewBox="0 0 24 24"><path fill="currentColor" d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z"></path></svg>Pages</a></li><li><a href="`
-	postview__143 = `"><svg viewBox="0 0 24 24"><path fill="currentColor" d="M17 14.4C17.6 14.4 18.1 14.9 18.1 15.5S17.6 16.6 17 16.6 15.9 16.1 15.9 15.5 16.4 14.4 17 14.4M17 17.5C16.3 17.5 14.8 17.9 14.8 18.6C15.3 19.3 16.1 19.8 17 19.8S18.7 19.3 19.2 18.6C19.2 17.9 17.7 17.5 17 17.5M18 11.1V6.3L10.5 3L3 6.3V11.2C3 15.7 6.2 20 10.5 21C11.1 20.9 11.6 20.7 12.1 20.5C13.2 22 15 23 17 23C20.3 23 23 20.3 23 17C23 14 20.8 11.6 18 11.1M11 17C11 17.6 11.1 18.1 11.2 18.6C11 18.7 10.7 18.8 10.5 18.9C7.3 17.9 5 14.7 5 11.2V7.6L10.5 5.2L16 7.6V11.1C13.2 11.6 11 14 11 17M17 21C14.8 21 13 19.2 13 17S14.8 13 17 13 21 14.8 21 17 19.2 21 17 21Z"></path></svg>Roles</a></li><li><a href="`
-	postview__144 = `"><svg viewBox="0 0 24 24"><path fill="currentColor" d="M13.07 10.41A5 5 0 0 0 13.07 4.59A3.39 3.39 0 0 1 15 4A3.5 3.5 0 0 1 15 11A3.39 3.39 0 0 1 13.07 10.41M5.5 7.5A3.5 3.5 0 1 1 9 11A3.5 3.5 0 0 1 5.5 7.5M7.5 7.5A1.5 1.5 0 1 0 9 6A1.5 1.5 0 0 0 7.5 7.5M16 17V19H2V17S2 13 9 13 16 17 16 17M14 17C13.86 16.22 12.67 15 9 15S4.07 16.31 4 17M15.95 13A5.32 5.32 0 0 1 18 17V19H22V17S22 13.37 15.94 13Z"></path></svg>Users</a></li><li><a href="`
-	postview__145 = `"><svg viewBox="0 0 24 24"><path fill="currentColor" d="M20 2H4C2.9 2 2 2.9 2 4V22L6 18H20C21.1 18 22 17.1 22 16V4C22 2.9 21.1 2 20 2M20 16H5.2L4 17.2V4H20V16Z"></path></svg>Comments</a></li><li><a href="`
-	postview__146 = `"><svg viewBox="0 0 24 24"><path fill="currentColor" d="M21,17H7V3H21M21,1H7A2,2 0 0,0 5,3V17A2,2 0 0,0 7,19H21A2,2 0 0,0 23,17V3A2,2 0 0,0 21,1M3,5H1V21A2,2 0 0,0 3,23H19V21H3M15.96,10.29L13.21,13.83L11.25,11.47L8.5,15H19.5L15.96,10.29Z"></path></svg>Files</a></li><li><a href="`
+	postview__19 = `</ul><label class="menu-trigger"><svg viewBox="0 0 24 24"><path fill="currentColor" d="M3,6H21V8H3V6M3,11H21V13H3V11M3,16H21V18H3V16Z"></path></svg></label></nav></header><div class="wrapper"><div class="container"><div class="layout two-right"><div class="main">`
+	postview__20 = `<article class="box full detail">`
+	postview__22 = `<h1 class="post-name">`
+	postview__23 = `</h1><div class="tags">`
+	postview__25 = `<hr/><h2>`
+	postview__26 = `</h2><div class="comments"><div class="flex">`
+	postview__27 = `<div><form method="post" action="/comments/new"><input type="hidden" name="post_id" value="`
+	postview__28 = `"/><textarea name="content" placeholder="Write your comment here..."></textarea><button type="submit">Comment</button></form></div></div>`
+	postview__29 = `</div></div></article></div><div class="right"><div class="box fixed-sidebar"><h2>Trending posts</h2><div class="posts-list">`
 )
 
 func PostView(post *entities.Post, relatedPosts []*entities.Post, comments []*entities.Comment) func(meta *entities.Meta, wr *bufio.Writer) {
 	return func(meta *entities.Meta, wr *bufio.Writer) {
 		buffer := &WriterAsBuffer{wr}
 
-		buffer.WriteString(postview__0)
+		buffer.WriteString(commentlist__0)
 
 		var title = meta.GetTitle()
 		var appName = config.Setting("app_name")
 		var appLogo = config.Setting("app_logo")
-		buffer.WriteString(postview__1)
+		var encodeRequestURL = url.QueryEscape(meta.RequestURL)
+		buffer.WriteString(commentlist__1)
 		WriteAll(title, true, buffer)
-		buffer.WriteString(postview__2)
+		buffer.WriteString(commentlist__2)
 		WriteAll(meta.Canonical, true, buffer)
-		buffer.WriteString(postview__3)
+		buffer.WriteString(commentlist__3)
 		WriteAll(meta.Type, true, buffer)
-		buffer.WriteString(postview__4)
+		buffer.WriteString(commentlist__4)
 		WriteAll(meta.Canonical, true, buffer)
-		buffer.WriteString(postview__5)
+		buffer.WriteString(commentlist__5)
 		WriteAll(title, true, buffer)
-		buffer.WriteString(postview__6)
+		buffer.WriteString(commentlist__6)
 		WriteAll(appName, true, buffer)
-		buffer.WriteString(postview__7)
+		buffer.WriteString(commentlist__7)
 		WriteAll(config.Setting("twitter_site"), true, buffer)
-		buffer.WriteString(postview__8)
+		buffer.WriteString(commentlist__8)
 		WriteAll(title, true, buffer)
-		buffer.WriteString(postview__9)
+		buffer.WriteString(commentlist__9)
 		WriteAll(appName, true, buffer)
-		buffer.WriteString(postview__10)
+		buffer.WriteString(commentlist__10)
 		WriteAll(appName, true, buffer)
-		buffer.WriteString(postview__11)
+		buffer.WriteString(commentlist__11)
 		WriteAll(appName+" Feed", true, buffer)
-		buffer.WriteString(postview__12)
+		buffer.WriteString(commentlist__12)
 		WriteAll(utils.Url("/feed"), true, buffer)
-		buffer.WriteString(postview__13)
+		buffer.WriteString(commentlist__13)
 		if appLogo != "" {
-			buffer.WriteString(postview__36)
+			buffer.WriteString(commentlist__30)
 			WriteAll(appLogo, true, buffer)
-			buffer.WriteString(postview__37)
+			buffer.WriteString(commentlist__31)
 			WriteAll(appLogo, true, buffer)
-			buffer.WriteString(postview__13)
+			buffer.WriteString(commentlist__13)
 		}
 		if meta.Description != "" {
-			buffer.WriteString(postview__39)
+			buffer.WriteString(commentlist__33)
 			WriteAll(meta.Description, true, buffer)
-			buffer.WriteString(postview__40)
+			buffer.WriteString(commentlist__34)
 			WriteAll(meta.Description, true, buffer)
-			buffer.WriteString(postview__41)
+			buffer.WriteString(commentlist__35)
 			WriteAll(meta.Description, true, buffer)
-			buffer.WriteString(postview__13)
+			buffer.WriteString(commentlist__13)
 		}
 		if meta.Image != "" {
-			buffer.WriteString(postview__43)
+			buffer.WriteString(commentlist__37)
 			WriteAll(meta.Image, true, buffer)
-			buffer.WriteString(postview__44)
+			buffer.WriteString(commentlist__38)
 			WriteAll(meta.Image, true, buffer)
-			buffer.WriteString(postview__13)
+			buffer.WriteString(commentlist__13)
 		}
 		WriteAll(asset.CssFile("css/light.min.css"), false, buffer)
 		WriteAll(asset.CssFile("css/style.css"), false, buffer)
 		WriteAll(config.Setting("inject_header"), false, buffer)
-		buffer.WriteString(postview__14)
+		buffer.WriteString(commentlist__14)
 		WriteAll(utils.Url(""), true, buffer)
-		buffer.WriteString(postview__15)
+		buffer.WriteString(commentlist__15)
 		var logoUrl = config.Setting("app_logo")
 		if logoUrl != "" {
-			buffer.WriteString(postview__46)
+			buffer.WriteString(commentlist__40)
 			WriteAll(logoUrl, true, buffer)
-			buffer.WriteString(postview__47)
+			buffer.WriteString(commentlist__41)
 			WriteAll(config.Setting("app_name"), true, buffer)
-			buffer.WriteString(postview__13)
+			buffer.WriteString(commentlist__13)
 		} else {
-			buffer.WriteString(postview__49)
+			buffer.WriteString(commentlist__43)
 
 		}
-		buffer.WriteString(postview__16)
+		buffer.WriteString(commentlist__16)
 		WriteAll(meta.Query, true, buffer)
-		buffer.WriteString(postview__17)
+		buffer.WriteString(commentlist__17)
 		WriteAll(utils.Url("/search"), true, buffer)
-		buffer.WriteString(postview__18)
+		buffer.WriteString(commentlist__18)
 
 		if meta.User == nil || meta.User.ID == 0 {
-			buffer.WriteString(postview__50)
-			WriteAll(utils.Url("/login"), true, buffer)
-			buffer.WriteString(postview__51)
-			WriteAll(utils.Url("/register"), true, buffer)
-			buffer.WriteString(postview__52)
+			buffer.WriteString(commentlist__44)
+			WriteAll(utils.Url("/login?redirectURL="+encodeRequestURL), true, buffer)
+			buffer.WriteString(commentlist__45)
+			WriteAll(utils.Url("/register?redirectURL="+encodeRequestURL), true, buffer)
+			buffer.WriteString(commentlist__46)
 
 		} else {
-			buffer.WriteString(postview__50)
+			buffer.WriteString(commentlist__44)
 			WriteAll(utils.Url("/posts/new"), true, buffer)
-			buffer.WriteString(postview__54)
+			buffer.WriteString(commentlist__48)
 			WriteAll(meta.User.Url(), true, buffer)
-			buffer.WriteString(postview__55)
+			buffer.WriteString(commentlist__49)
 			WriteAll(meta.User.Username, true, buffer)
-			buffer.WriteString(postview__56)
+			buffer.WriteString(commentlist__50)
 			if meta.User.AvatarImageUrl != "" {
-				buffer.WriteString(postview__63)
+				buffer.WriteString(commentlist__57)
 				WriteAll(meta.User.AvatarImageUrl, true, buffer)
-				buffer.WriteString(postview__47)
+				buffer.WriteString(commentlist__41)
 				WriteAll(meta.User.Username, true, buffer)
-				buffer.WriteString(postview__13)
+				buffer.WriteString(commentlist__13)
 			} else {
-				buffer.WriteString(postview__66)
+				buffer.WriteString(commentlist__60)
 
 			}
-			buffer.WriteString(postview__57)
+			buffer.WriteString(commentlist__51)
 
 			if meta.User != nil && meta.User.IsRoot() {
-				buffer.WriteString(postview__50)
+				buffer.WriteString(commentlist__44)
 				WriteAll(utils.Url("/manage"), true, buffer)
-				buffer.WriteString(postview__68)
+				buffer.WriteString(commentlist__62)
 
 			}
-			buffer.WriteString(postview__50)
+			buffer.WriteString(commentlist__44)
 			WriteAll(meta.User.Url(), true, buffer)
-			buffer.WriteString(postview__59)
+			buffer.WriteString(commentlist__53)
 			WriteAll(utils.Url("/posts"), true, buffer)
-			buffer.WriteString(postview__60)
+			buffer.WriteString(commentlist__54)
 			WriteAll(utils.Url("/settings"), true, buffer)
-			buffer.WriteString(postview__61)
-			WriteAll(utils.Url("/logout"), true, buffer)
-			buffer.WriteString(postview__62)
+			buffer.WriteString(commentlist__55)
+			WriteAll(utils.Url("/logout?redirectURL="+encodeRequestURL), true, buffer)
+			buffer.WriteString(commentlist__56)
 
 		}
 		buffer.WriteString(postview__19)
@@ -265,51 +159,51 @@ func PostView(post *entities.Post, relatedPosts []*entities.Post, comments []*en
 			)
 
 			if msgs.Length() > 0 {
-				buffer.WriteString(postview__69)
+				buffer.WriteString(commentlist__73)
 				var messages = msgs.Get()
 				for _, msg := range messages {
-					buffer.WriteString(postview__71)
+					buffer.WriteString(commentlist__75)
 					WriteAll(msg.Type, true, buffer)
-					buffer.WriteString(postview__56)
+					buffer.WriteString(commentlist__50)
 					WriteAll(msg.Message, true, buffer)
-					buffer.WriteString(postview__73)
+					buffer.WriteString(commentlist__77)
 				}
-				buffer.WriteString(postview__70)
+				buffer.WriteString(commentlist__74)
 			}
 		}
 
 		buffer.WriteString(postview__20)
 		if post.FeaturedImage != nil && post.FeaturedImage.ID > 0 {
-			buffer.WriteString(postview__74)
+			buffer.WriteString(pageview__69)
 			WriteAll(post.FeaturedImage.Url(), true, buffer)
-			buffer.WriteString(postview__47)
+			buffer.WriteString(commentlist__41)
 			WriteAll(post.Name, true, buffer)
-			buffer.WriteString(postview__76)
+			buffer.WriteString(pageview__71)
 
 		}
-		buffer.WriteString(postview__21)
+		buffer.WriteString(index__81)
 		{
 			var (
 				post = post
 			)
 
-			buffer.WriteString(postview__77)
+			buffer.WriteString(commentlist__63)
 			WriteAll(post.User.AvatarElm("32", "32", false), false, buffer)
-			buffer.WriteString(postview__78)
+			buffer.WriteString(commentlist__64)
 			WriteAll(post.User.Url(), true, buffer)
-			buffer.WriteString(postview__55)
+			buffer.WriteString(commentlist__49)
 			WriteAll(post.User.Name(), true, buffer)
-			buffer.WriteString(postview__56)
+			buffer.WriteString(commentlist__50)
 			WriteAll(post.User.Name(), true, buffer)
-			buffer.WriteString(postview__81)
+			buffer.WriteString(index__96)
 			WriteAll(post.CreatedAt.Format("2006-01-02T15:04:05-0700"), true, buffer)
-			buffer.WriteString(postview__82)
+			buffer.WriteString(index__97)
 			WriteAll(post.CreatedAt.Format("January 2, 2006"), true, buffer)
-			buffer.WriteString(postview__83)
+			buffer.WriteString(index__98)
 			WriteEscString(fmt.Sprintf("%d views", post.ViewCount), buffer)
-			buffer.WriteString(postview__84)
+			buffer.WriteString(index__99)
 			WriteEscString(fmt.Sprintf("%d comments", post.CommentCount), buffer)
-			buffer.WriteString(postview__85)
+			buffer.WriteString(index__100)
 
 		}
 
@@ -318,13 +212,13 @@ func PostView(post *entities.Post, relatedPosts []*entities.Post, comments []*en
 		buffer.WriteString(postview__23)
 
 		for _, topic := range post.Topics {
-			buffer.WriteString(postview__86)
+			buffer.WriteString(commentlist__106)
 			WriteAll(topic.Url(), true, buffer)
-			buffer.WriteString(postview__56)
+			buffer.WriteString(commentlist__50)
 			WriteAll("#"+topic.Name, true, buffer)
-			buffer.WriteString(postview__88)
+			buffer.WriteString(commentlist__132)
 		}
-		buffer.WriteString(postview__24)
+		buffer.WriteString(commentlist__22)
 		WriteAll(post.ContentHTML, false, buffer)
 		buffer.WriteString(postview__25)
 		WriteEscString(fmt.Sprintf("Discussion (%d)", post.CommentCount), buffer)
@@ -345,63 +239,63 @@ func PostView(post *entities.Post, relatedPosts []*entities.Post, comments []*en
 				)
 
 				if extraInfo {
-					buffer.WriteString(postview__97)
+					buffer.WriteString(commentlist__86)
 					WriteAll(comment.Post.Url(), true, buffer)
-					buffer.WriteString(postview__98)
+					buffer.WriteString(commentlist__87)
 					WriteAll(comment.Post.Name, true, buffer)
-					buffer.WriteString(postview__99)
+					buffer.WriteString(commentlist__88)
 
 				}
-				buffer.WriteString(postview__89)
+				buffer.WriteString(commentlist__78)
 				WriteEscString(fmt.Sprintf("comment-%d", comment.ID), buffer)
-				buffer.WriteString(postview__56)
+				buffer.WriteString(commentlist__50)
 				WriteAll(comment.User.AvatarElm("30", "30", false), false, buffer)
-				buffer.WriteString(postview__78)
+				buffer.WriteString(commentlist__64)
 				WriteAll(comment.User.Url(), true, buffer)
-				buffer.WriteString(postview__56)
+				buffer.WriteString(commentlist__50)
 				WriteAll(comment.User.Name(), true, buffer)
-				buffer.WriteString(postview__93)
+				buffer.WriteString(commentlist__82)
 				WriteAll(comment.CreatedAt.Format("January 2, 2006 15:04 MST"), true, buffer)
-				buffer.WriteString(postview__94)
+				buffer.WriteString(commentlist__83)
 				WriteAll(comment.ContentHTML, false, buffer)
 				if editCondition {
-					buffer.WriteString(postview__100)
+					buffer.WriteString(commentlist__89)
 					WriteAll(comment.ID, true, buffer)
-					buffer.WriteString(postview__101)
+					buffer.WriteString(commentlist__90)
 					WriteAll(comment.ID, true, buffer)
-					buffer.WriteString(postview__102)
+					buffer.WriteString(commentlist__91)
 
 					if extraInfo {
 						var commentUrl = fmt.Sprintf("%s#comment-%d", comment.Post.Url(), comment.ID)
 						var postCommentsUrl = fmt.Sprintf("/manage/comments?post=%d", postID)
 						var userCommentsUrl = fmt.Sprintf("/manage/comments?user=%d", postID)
-						buffer.WriteString(postview__104)
+						buffer.WriteString(commentlist__93)
 						WriteEscString(commentUrl, buffer)
-						buffer.WriteString(postview__105)
+						buffer.WriteString(commentlist__94)
 
 						if meta.User.IsRoot() {
-							buffer.WriteString(postview__106)
+							buffer.WriteString(commentlist__95)
 							WriteEscString(postCommentsUrl, buffer)
-							buffer.WriteString(postview__107)
+							buffer.WriteString(commentlist__96)
 							WriteEscString(userCommentsUrl, buffer)
-							buffer.WriteString(postview__108)
+							buffer.WriteString(commentlist__97)
 
 						}
 					}
-					buffer.WriteString(postview__24)
+					buffer.WriteString(commentlist__22)
 				}
-				buffer.WriteString(postview__24)
+				buffer.WriteString(commentlist__22)
 				if editCondition {
-					buffer.WriteString(postview__109)
+					buffer.WriteString(commentlist__98)
 					WriteEscString(fmt.Sprintf("/comments/%d", comment.ID), buffer)
-					buffer.WriteString(postview__110)
+					buffer.WriteString(commentlist__99)
 					WriteAll(postID, true, buffer)
-					buffer.WriteString(postview__111)
+					buffer.WriteString(commentlist__100)
 					WriteAll(comment.Content, true, buffer)
-					buffer.WriteString(postview__112)
+					buffer.WriteString(commentlist__101)
 
 				}
-				buffer.WriteString(postview__96)
+				buffer.WriteString(commentlist__85)
 			}
 
 		}
@@ -414,114 +308,114 @@ func PostView(post *entities.Post, relatedPosts []*entities.Post, comments []*en
 					pos  = pos + 1
 				)
 
-				buffer.WriteString(postview__113)
+				buffer.WriteString(index__109)
 
 				if pos > 0 {
-					buffer.WriteString(postview__119)
+					buffer.WriteString(index__115)
 					WriteEscString(fmt.Sprintf("# %d", pos), buffer)
-					buffer.WriteString(postview__120)
+					buffer.WriteString(index__116)
 				}
-				buffer.WriteString(postview__86)
+				buffer.WriteString(commentlist__106)
 				WriteAll(post.Url(), true, buffer)
-				buffer.WriteString(postview__55)
+				buffer.WriteString(commentlist__49)
 				WriteAll(post.Name, true, buffer)
-				buffer.WriteString(postview__56)
+				buffer.WriteString(commentlist__50)
 				WriteAll(post.Name, true, buffer)
-				buffer.WriteString(postview__117)
+				buffer.WriteString(index__113)
 
 				for _, topic := range post.Topics {
-					buffer.WriteString(postview__86)
+					buffer.WriteString(commentlist__106)
 					WriteAll(topic.Url(), true, buffer)
-					buffer.WriteString(postview__55)
+					buffer.WriteString(commentlist__49)
 					WriteAll(topic.Name, true, buffer)
-					buffer.WriteString(postview__56)
+					buffer.WriteString(commentlist__50)
 					WriteAll("#"+topic.Name, true, buffer)
-					buffer.WriteString(postview__88)
+					buffer.WriteString(commentlist__132)
 				}
-				buffer.WriteString(postview__118)
+				buffer.WriteString(index__114)
 			}
 
 		}
-		buffer.WriteString(postview__30)
+		buffer.WriteString(index__26)
 		WriteAll(config.Setting("app_name"), true, buffer)
-		buffer.WriteString(postview__31)
+		buffer.WriteString(commentlist__25)
 
 		if meta.User == nil || meta.User.ID == 0 {
-			buffer.WriteString(postview__86)
-			WriteAll(utils.Url("/login"), true, buffer)
-			buffer.WriteString(postview__126)
-			WriteAll(utils.Url("/register"), true, buffer)
-			buffer.WriteString(postview__127)
+			buffer.WriteString(commentlist__106)
+			WriteAll(utils.Url("/login?redirectURL="+encodeRequestURL), true, buffer)
+			buffer.WriteString(commentlist__107)
+			WriteAll(utils.Url("/register?redirectURL="+encodeRequestURL), true, buffer)
+			buffer.WriteString(commentlist__108)
 
 		} else {
 			{
-				buffer.WriteString(postview__77)
+				buffer.WriteString(commentlist__63)
 				WriteAll(meta.User.AvatarElm("32", "32", false), false, buffer)
-				buffer.WriteString(postview__78)
+				buffer.WriteString(commentlist__64)
 				WriteAll(meta.User.Url(), true, buffer)
-				buffer.WriteString(postview__56)
+				buffer.WriteString(commentlist__50)
 				WriteAll(meta.User.Name(), true, buffer)
-				buffer.WriteString(postview__131)
+				buffer.WriteString(commentlist__66)
 				WriteAll("@"+meta.User.Username, true, buffer)
-				buffer.WriteString(postview__132)
+				buffer.WriteString(commentlist__67)
 				WriteAll(utils.Url("/posts/new"), true, buffer)
-				buffer.WriteString(postview__133)
+				buffer.WriteString(commentlist__68)
 				WriteAll(utils.Url("/posts"), true, buffer)
-				buffer.WriteString(postview__134)
+				buffer.WriteString(commentlist__69)
 				WriteAll(utils.Url("/comments"), true, buffer)
-				buffer.WriteString(postview__135)
+				buffer.WriteString(commentlist__70)
 				WriteAll(utils.Url("/files"), true, buffer)
-				buffer.WriteString(postview__136)
+				buffer.WriteString(commentlist__71)
 				WriteAll(utils.Url("/settings"), true, buffer)
-				buffer.WriteString(postview__137)
+				buffer.WriteString(commentlist__72)
 
 			}
 
 			if meta.User.IsRoot() {
 				{
-					buffer.WriteString(postview__138)
+					buffer.WriteString(commentlist__119)
 					WriteAll(utils.Url("/manage"), true, buffer)
-					buffer.WriteString(postview__139)
+					buffer.WriteString(commentlist__120)
 					WriteAll(utils.Url("/manage/topics"), true, buffer)
-					buffer.WriteString(postview__140)
+					buffer.WriteString(commentlist__121)
 					WriteAll(utils.Url("/manage/posts"), true, buffer)
-					buffer.WriteString(postview__141)
+					buffer.WriteString(commentlist__122)
 					WriteAll(utils.Url("/manage/pages"), true, buffer)
-					buffer.WriteString(postview__142)
+					buffer.WriteString(commentlist__123)
 					WriteAll(utils.Url("/manage/roles"), true, buffer)
-					buffer.WriteString(postview__143)
+					buffer.WriteString(commentlist__124)
 					WriteAll(utils.Url("/manage/users"), true, buffer)
-					buffer.WriteString(postview__144)
+					buffer.WriteString(commentlist__125)
 					WriteAll(utils.Url("/manage/comments"), true, buffer)
-					buffer.WriteString(postview__145)
+					buffer.WriteString(commentlist__126)
 					WriteAll(utils.Url("/manage/files"), true, buffer)
-					buffer.WriteString(postview__146)
+					buffer.WriteString(commentlist__127)
 					WriteAll(utils.Url("/manage/settings"), true, buffer)
-					buffer.WriteString(postview__137)
+					buffer.WriteString(commentlist__72)
 
 				}
 
 			}
 		}
-		buffer.WriteString(postview__32)
+		buffer.WriteString(commentlist__26)
 
 		for _, topic := range cache.Topics {
-			buffer.WriteString(postview__86)
+			buffer.WriteString(commentlist__106)
 			WriteAll(topic.Url(), true, buffer)
-			buffer.WriteString(postview__55)
+			buffer.WriteString(commentlist__49)
 			WriteAll(topic.Name, true, buffer)
-			buffer.WriteString(postview__56)
+			buffer.WriteString(commentlist__50)
 			WriteAll("#"+topic.Name, true, buffer)
-			buffer.WriteString(postview__88)
+			buffer.WriteString(commentlist__132)
 		}
-		buffer.WriteString(postview__33)
+		buffer.WriteString(commentlist__27)
 		WriteAll(config.Setting("footer_content"), false, buffer)
-		buffer.WriteString(postview__34)
+		buffer.WriteString(commentlist__28)
 		WriteAll(config.Setting("inject_footer"), false, buffer)
 		WriteAll(asset.JsFile("js/layout.js"), false, buffer)
 		WriteAll(asset.JsFile("editor/highlight-11.5.0.min.js"), false, buffer)
 		WriteAll(asset.JsFile("js/main.js"), false, buffer)
-		buffer.WriteString(postview__35)
+		buffer.WriteString(managecommentindex__31)
 
 	}
 }

@@ -1,7 +1,7 @@
 extends ../partials/layout.jade
 
 block content
-  :go:func Register(username, email string)
+  :go:func Register(username, email, requestURL string)
   .container
     .layout
       .left
@@ -9,7 +9,7 @@ block content
         .box.login
           h1.text-center Register
           +Messages(meta.Messages)
-          form(action=utils.Url("/register"), method="post")
+          form(action=requestURL, method="post")
             p
               label.required Username
               input(type="text", name="username", placeholder="Username" value=username)

@@ -64,6 +64,7 @@ type Meta struct {
 	Type        string
 	Image       string
 	Canonical   string
+	RequestURL  string //this field stores the last part of the URL after "?redirectURL="
 	User        *User
 	Messages    *Messages
 }

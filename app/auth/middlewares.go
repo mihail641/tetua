@@ -64,7 +64,7 @@ func Check(c server.Context) error {
 	}
 
 	if user == nil || user.ID == 0 {
-		return c.Redirect("/login?back=" + url.QueryEscape(c.OriginalURL()))
+		return c.Redirect("/login?redirectURL=" + url.QueryEscape(c.OriginalURL()))
 	}
 
 	return c.Status(http.StatusForbidden).SendString("Insufficient permission")

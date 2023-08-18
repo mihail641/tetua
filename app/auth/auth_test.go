@@ -425,12 +425,12 @@ func TestGuestViewPostAllActionConfigs(t *testing.T) {
 
 	_, resp = mock.GetRequest(s, "/posts/1")
 	assert.Equal(t, http.StatusFound, resp.StatusCode)
-	assert.Equal(t, "/login?back=%2Fposts%2F1", resp.Header["Location"][0])
+	assert.Equal(t, "/login?redirectURL=%2Fposts%2F1", resp.Header["Location"][0])
 
 	s = createServerWithAuthConfig("guest.post.view.perm_own")
 	_, resp = mock.GetRequest(s, "/posts/1")
 	assert.Equal(t, http.StatusFound, resp.StatusCode)
-	assert.Equal(t, "/login?back=%2Fposts%2F1", resp.Header["Location"][0])
+	assert.Equal(t, "/login?redirectURL=%2Fposts%2F1", resp.Header["Location"][0])
 
 	cache.RolesPermissions = []*entities.RolePermissions{{
 		RoleID: 3, // Guest

@@ -1,7 +1,7 @@
 extends ../partials/layout.jade
 
 block content
-  :go:func Login()
+  :go:func Login(requestURL string)
   .container
     .layout
       .left
@@ -9,7 +9,7 @@ block content
         .box.login
           h1.text-center Login
           +Messages(meta.Messages)
-          form(action=utils.Url("/login"), method="post")
+          form(action=requestURL, method="post")
             p
               label.required Username or Email
               input(type="text", name="login", placeholder="Login")

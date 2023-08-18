@@ -10,6 +10,7 @@ import (
 	"github.com/ngocphuongnb/tetua/app/entities"
 	"github.com/ngocphuongnb/tetua/app/logger"
 	"github.com/ngocphuongnb/tetua/app/server"
+	"github.com/ngocphuongnb/tetua/app/url_utils"
 	"github.com/ngocphuongnb/tetua/app/utils"
 	"github.com/valyala/fasthttp"
 	"mime/multipart"
@@ -90,11 +91,18 @@ func (c *Context) Render(fn func(meta *entities.Meta, wr *bufio.Writer)) error {
 	if c.Meta().Canonical == "" {
 		c.Meta().Canonical = utils.Url(c.Path())
 	}
+	if c.Meta().RequestURL == "" {
+		c.Meta().RequestURL = utils.Url(c.Path())
+	}
+
+	requestURL := url_utils.GetRedirectURL(c)
+	if requestURL != "" {
+		c.Meta().RequestURL = requestURL
+	}
 
 	if c.Meta().Type == "" {
 		c.Meta().Type = "website"
 	}
-
 	c.Response().Header("content-type", "text/html; charset=utf-8")
 	requestID := fiberUtils.ImmutableString(c.RequestID())
 	c.Ctx.Response().SetBodyStreamWriter(func(w *bufio.Writer) {
