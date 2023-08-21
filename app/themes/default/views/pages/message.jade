@@ -1,7 +1,7 @@
 extends ../partials/layout.jade
 
 block content
-  :go:func Message(title, content, redirectUrl string, timeout int)
+  :go:func Message(header, content, redirectUrl string, timeout int)
   .container
     if redirectUrl != "" && timeout > 0
         meta(http-equiv='refresh' content=fmt.Sprintf("%d; url=%s", timeout, redirectUrl))
@@ -9,7 +9,7 @@ block content
       .left
       .main
         .box.login
-          h1.text-center=title
+          h1.text-center=header
           +Messages(meta.Messages)
           p=content
       .right

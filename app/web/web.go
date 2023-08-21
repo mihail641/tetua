@@ -178,6 +178,12 @@ func NewServer(cfg Config) server.Server {
 	profile := s.Group("/u")
 	profile.Get("/:username", webuser.Profile, authUserProfile)
 
+	recover := s.Group("/recover")
+	recover.Get("", webuser.Recover)
+	recover.Post("", webuser.PostRecover)
+	recover.Get("/:code", webuser.ChangePassword)
+	recover.Post("/:code", webuser.PostChangePassword)
+
 	s.Get("", Index)
 	s.Get("/search", Search)
 	s.Get("/feed", Feed)

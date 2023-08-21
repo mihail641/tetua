@@ -107,18 +107,18 @@ func PostRegister(c server.Context) (err error) {
 		)
 	} else {
 		welcomeMessage = "Your account has been created. We've sent you an email to activate your account, please check your mailbox."
-		exp := time.Now().Add(time.Hour * 24)
-		activationCode, err := utils.Encrypt(fmt.Sprintf("%d_%d", user.ID, exp.UnixMicro()))
+		activationCode, err := GetActivationCode(user.ID)
 		if err != nil {
 			logger.Error(err)
 			welcomeMessage = messageError
 			welcomeMessage += "please contact us with your username/email and this trace id: " + c.RequestID()
 		}
+		link := c.BaseUrl() + "/activate?code=" + activationCode
 
 		mailBody = append(
 			mailBody,
 			"Follow the link below to complete your registration:",
-			utils.Url("/activate?code="+activationCode),
+			"<a href='"+link+"'>"+link+"</a>",
 		)
 	}
 
@@ -136,4 +136,12 @@ func PostRegister(c server.Context) (err error) {
 	}
 
 	return c.Render(views.Message("Thank you for signing up", welcomeMessage, redirectURL, 0))
+}
+func GetActivationCode(userID int) (string, error) {
+	exp := time.Now().Add(time.Hour * 24)
+	activationCode, err := utils.Encrypt(fmt.Sprintf("%d_%d", userID, exp.UnixMicro()))
+	if err != nil {
+		return "", err
+	}
+	return activationCode, err
 }
