@@ -27,6 +27,8 @@ const (
 	FieldSize = "size"
 	// FieldUserID holds the string denoting the user_id field in the database.
 	FieldUserID = "user_id"
+	// FieldCompression holds the string denoting the compression field in the database.
+	FieldCompression = "compression"
 	// EdgeUser holds the string denoting the user edge name in mutations.
 	EdgeUser = "user"
 	// EdgePosts holds the string denoting the posts edge name in mutations.
@@ -78,6 +80,7 @@ var Columns = []string{
 	FieldType,
 	FieldSize,
 	FieldUserID,
+	FieldCompression,
 }
 
 // ValidColumn reports if the column name is valid (part of the table columns).

@@ -180,6 +180,6 @@ func (m *CommentRepository) PaginateWithPost(ctx context.Context, filters ...*en
 	}, nil
 }
 
-func (m *CommentRepository) DeleteComment(ctx context.Context, e *entities.Comment, id int, postId int) error {
+func (m *CommentRepository) DeleteComment(ctx context.Context, id int, postId int) error {
 	return nil
 }

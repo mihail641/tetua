@@ -23,6 +23,10 @@ type Context struct {
 	MetaData *entities.Meta
 }
 
+func (c *Context) Body() []byte {
+	return c.Ctx.Body()
+}
+
 type Response struct {
 	*fasthttp.Response
 }

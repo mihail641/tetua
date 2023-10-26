@@ -1,7 +1,11 @@
 package web
 
 import (
+	"context"
+	"fmt"
+	"github.com/ngocphuongnb/tetua/app/config"
 	"net/http"
+
 	"sync"
 
 	"github.com/ngocphuongnb/tetua/app/entities"
@@ -65,16 +69,27 @@ func FileDelete(c server.Context) (err error) {
 }
 
 func Upload(c server.Context) error {
+	lenBody := len(c.Body())
+	if lenBody >= config.IMAGE_LIMIT*1024*1024 {
+		err := fmt.Sprintf("Error saving file, file larger than the allowed value of %d Mb", config.IMAGE_LIMIT)
+		// Размер тела запроса превышает IMAGE_LIMIT, отправляем пользователю ошибку.
+		return c.Status(http.StatusRequestEntityTooLarge).Json(entities.Map{
+			"error": err,
+		})
+	}
 	if uploadFile, err := c.File("file"); err == nil {
-		if uploadedFile, err := fs.Disk().PutMultipart(c.Context(), uploadFile); err != nil {
+		fileType := c.Param("fileType")
+		ctxWithValue := context.WithValue(c.Context(), "fileType", fileType)
+		if uploadedFile, err := fs.Disk().PutMultipart(ctxWithValue, uploadFile); err != nil {
 			c.Logger().Error(err)
 		} else {
 			f, err := repositories.File.Create(c.Context(), &entities.File{
-				Disk:   uploadedFile.Disk,
-				Path:   uploadedFile.Path,
-				Type:   uploadedFile.Type,
-				Size:   uploadedFile.Size,
-				UserID: c.User().ID,
+				Disk:        uploadedFile.Disk,
+				Path:        uploadedFile.Path,
+				Type:        uploadedFile.Type,
+				Size:        uploadedFile.Size,
+				UserID:      c.User().ID,
+				Compression: uploadedFile.Compression,
 			})
 
 			if err != nil {

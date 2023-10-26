@@ -24,10 +24,11 @@ func SaveFile(c server.Context, inputFileName string) (*entities.File, error) {
 	}
 
 	return repositories.File.Create(c.Context(), &entities.File{
-		Disk:   featuredImage.Disk,
-		Path:   featuredImage.Path,
-		Type:   featuredImage.Type,
-		Size:   featuredImage.Size,
-		UserID: c.User().ID,
+		Disk:        featuredImage.Disk,
+		Path:        featuredImage.Path,
+		Type:        featuredImage.Type,
+		Size:        featuredImage.Size,
+		UserID:      c.User().ID,
+		Compression: featuredImage.Compression,
 	})
 }

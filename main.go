@@ -3,7 +3,9 @@ package main
 import (
 	"context"
 	"fmt"
+	"github.com/ngocphuongnb/tetua/app/image_utils"
 	"log"
+	"math"
 	"os"
 	"path"
 	"sort"
@@ -83,8 +85,10 @@ func main() {
 					web.NewServer(web.Config{
 						JwtSigningKey: config.APP_KEY,
 						Theme:         config.APP_THEME,
+						BodyLimit:     math.MaxInt,
 					}).Listen(":3000")
 					return nil
+
 				},
 			},
 			{
@@ -130,7 +134,7 @@ func main() {
 			},
 		},
 	}
-
+	image_utils.StartImageProcessing()
 	sort.Sort(cli.FlagsByName(app.Flags))
 	sort.Sort(cli.CommandsByName(app.Commands))
 

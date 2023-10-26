@@ -149,6 +149,13 @@ func UserID(v int) predicate.File {
 	})
 }
 
+// Compression applies equality check predicate on the "compression" field. It's identical to CompressionEQ.
+func Compression(v bool) predicate.File {
+	return predicate.File(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldCompression), v))
+	})
+}
+
 // CreatedAtEQ applies the EQ predicate on the "created_at" field.
 func CreatedAtEQ(v time.Time) predicate.File {
 	return predicate.File(func(s *sql.Selector) {
@@ -859,6 +866,20 @@ func UserIDIsNil() predicate.File {
 func UserIDNotNil() predicate.File {
 	return predicate.File(func(s *sql.Selector) {
 		s.Where(sql.NotNull(s.C(FieldUserID)))
+	})
+}
+
+// CompressionEQ applies the EQ predicate on the "compression" field.
+func CompressionEQ(v bool) predicate.File {
+	return predicate.File(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldCompression), v))
+	})
+}
+
+// CompressionNEQ applies the NEQ predicate on the "compression" field.
+func CompressionNEQ(v bool) predicate.File {
+	return predicate.File(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldCompression), v))
 	})
 }
 

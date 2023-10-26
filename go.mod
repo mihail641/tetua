@@ -6,6 +6,7 @@ require (
 	entgo.io/ent v0.10.1
 	github.com/Joker/hpp v1.0.0
 	github.com/Joker/jade v1.1.3
+	github.com/disintegration/imaging v1.6.2
 	github.com/go-sql-driver/mysql v1.6.0
 	github.com/gofiber/fiber/v2 v2.30.0
 	github.com/golang-jwt/jwt/v4 v4.4.0
@@ -78,6 +79,7 @@ require (
 	go.opencensus.io v0.23.0 // indirect
 	go.opentelemetry.io/otel v1.0.1 // indirect
 	go.opentelemetry.io/otel/trace v1.0.1 // indirect
+	golang.org/x/image v0.0.0-20191009234506-e7c1f5e7dbb8
 	golang.org/x/mod v0.6.0-dev.0.20220106191415-9b9b3d81d5e3 // indirect
 	golang.org/x/net v0.0.0-20220412020605-290c469a71a5 // indirect
 	golang.org/x/sync v0.0.0-20210220032951-036812b2e83c // indirect

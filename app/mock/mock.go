@@ -57,6 +57,9 @@ func CreateUploadRequest(method, uri, fieldName, fileName string) *http.Request 
 	if strings.HasSuffix(fileName, ".png") {
 		contentType = "image/png"
 	}
+	if strings.HasSuffix(fileName, ".bmp") {
+		contentType = "image/bmp"
+	}
 
 	header := make(textproto.MIMEHeader)
 	header.Set(

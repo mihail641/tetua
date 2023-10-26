@@ -13,5 +13,6 @@ func All() []server.Handler {
 		RequestLog,
 		Cookie,
 		auth.Check,
+		RequestSize,
 	}
 }

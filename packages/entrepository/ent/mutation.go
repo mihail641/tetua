@@ -1143,6 +1143,7 @@ type FileMutation struct {
 	_type               *string
 	size                *int
 	addsize             *int
+	compression         *bool
 	clearedFields       map[string]struct{}
 	user                *int
 	cleareduser         bool
@@ -1592,6 +1593,42 @@ func (m *FileMutation) ResetUserID() {
 	delete(m.clearedFields, file.FieldUserID)
 }
 
+// SetCompression sets the "compression" field.
+func (m *FileMutation) SetCompression(b bool) {
+	m.compression = &b
+}
+
+// Compression returns the value of the "compression" field in the mutation.
+func (m *FileMutation) Compression() (r bool, exists bool) {
+	v := m.compression
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldCompression returns the old "compression" field's value of the File entity.
+// If the File object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *FileMutation) OldCompression(ctx context.Context) (v bool, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldCompression is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldCompression requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldCompression: %w", err)
+	}
+	return oldValue.Compression, nil
+}
+
+// ResetCompression resets all changes to the "compression" field.
+func (m *FileMutation) ResetCompression() {
+	m.compression = nil
+}
+
 // ClearUser clears the "user" edge to the User entity.
 func (m *FileMutation) ClearUser() {
 	m.cleareduser = true
@@ -1799,7 +1836,7 @@ func (m *FileMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *FileMutation) Fields() []string {
-	fields := make([]string, 0, 8)
+	fields := make([]string, 0, 9)
 	if m.created_at != nil {
 		fields = append(fields, file.FieldCreatedAt)
 	}
@@ -1823,6 +1860,9 @@ func (m *FileMutation) Fields() []string {
 	}
 	if m.user != nil {
 		fields = append(fields, file.FieldUserID)
+	}
+	if m.compression != nil {
+		fields = append(fields, file.FieldCompression)
 	}
 	return fields
 }
@@ -1848,6 +1888,8 @@ func (m *FileMutation) Field(name string) (ent.Value, bool) {
 		return m.Size()
 	case file.FieldUserID:
 		return m.UserID()
+	case file.FieldCompression:
+		return m.Compression()
 	}
 	return nil, false
 }
@@ -1873,6 +1915,8 @@ func (m *FileMutation) OldField(ctx context.Context, name string) (ent.Value, er
 		return m.OldSize(ctx)
 	case file.FieldUserID:
 		return m.OldUserID(ctx)
+	case file.FieldCompression:
+		return m.OldCompression(ctx)
 	}
 	return nil, fmt.Errorf("unknown File field %s", name)
 }
@@ -1937,6 +1981,13 @@ func (m *FileMutation) SetField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetUserID(v)
+		return nil
+	case file.FieldCompression:
+		v, ok := value.(bool)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetCompression(v)
 		return nil
 	}
 	return fmt.Errorf("unknown File field %s", name)
@@ -2040,6 +2091,9 @@ func (m *FileMutation) ResetField(name string) error {
 		return nil
 	case file.FieldUserID:
 		m.ResetUserID()
+		return nil
+	case file.FieldCompression:
+		m.ResetCompression()
 		return nil
 	}
 	return fmt.Errorf("unknown File field %s", name)

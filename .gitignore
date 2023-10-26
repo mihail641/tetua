@@ -12,4 +12,4 @@ dist/
 .idea
 node_modules/
 config.json
-*.jade.go
+views/*.jade.go

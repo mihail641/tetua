@@ -64,6 +64,8 @@ var (
 	PRIVATE_DIR      = "private"
 	COOKIE_UUID      = "uuid"
 	SHOW_TETUA_BLOCK = false
+	REQUEST_LIMIT    = 4
+	IMAGE_LIMIT      = 9
 )
 
 var Mail *MailConfig

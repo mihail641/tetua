@@ -17,10 +17,11 @@ type FSDisk interface {
 }
 
 type FileInfo struct {
-	Disk string `json:"disk,omitempty"`
-	Path string `json:"path,omitempty"`
-	Type string `json:"type,omitempty"`
-	Size int    `json:"size,omitempty"`
+	Disk        string `json:"disk,omitempty"`
+	Path        string `json:"path,omitempty"`
+	Type        string `json:"type,omitempty"`
+	Size        int    `json:"size,omitempty"`
+	Compression bool   `json:"compression,omitempty"`
 }
 
 type DiskConfig struct {

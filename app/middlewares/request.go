@@ -1,6 +1,10 @@
 package middlewares
 
 import (
+	"fmt"
+	"github.com/ngocphuongnb/tetua/app/config"
+	"github.com/ngocphuongnb/tetua/app/entities"
+	"net/http"
 	"time"
 
 	"github.com/google/uuid"
@@ -41,4 +45,23 @@ func RequestLog(c server.Context) error {
 
 	c.Logger().Info("Request completed", logContext)
 	return nil
+}
+
+// RequestSize проверка является ли тело запроса от клиента больше разрешенного значения
+func RequestSize(c server.Context) error {
+	bodyRequest := c.Body()
+	requestSize := len(bodyRequest)
+
+	url := c.Path()
+	if url == "/files/upload/image" {
+		return c.Next()
+	}
+	err := fmt.Sprintf("Error saving file, file larger than the allowed value of %d Mb", config.REQUEST_LIMIT)
+	if requestSize > config.REQUEST_LIMIT*1024*1024 {
+		// Размер тела запроса превышает 4 Мбайта, отправляем пользователю ошибку.
+		return c.Status(http.StatusRequestEntityTooLarge).Json(entities.Map{
+			"error": err})
+
+	}
+	return c.Next()
 }

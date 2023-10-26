@@ -32,6 +32,7 @@ func CreateFileRepository(client *ent.Client) *FileRepository {
 				SetSize(data.Size).
 				SetType(data.Type).
 				SetUserID(data.UserID).
+				SetCompression(data.Compression).
 				Save(ctx)
 		},
 		UpdateFn: func(ctx context.Context, client *ent.Client, data *e.File) (*ent.File, error) {
