@@ -19,7 +19,7 @@ block content
             div
               button.btn.btn-primary(type="submit" style="background: #313131") Login
               | &nbsp;&nbsp;
-              a(href="#") Forgot password?
+              a(href=utils.Url("/recover?redirectURL=" + encodeRequestURL)) Forgot password?
           hr
           ul.socials
             if utils.SliceContains(config.Auth.EnabledProviders, "google")

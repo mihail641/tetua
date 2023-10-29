@@ -83,6 +83,20 @@ func (m *UserRepository) ByUsernameOrEmail(ctx context.Context, username, email 
 
 	return result, nil
 }
+func (m *UserRepository) ByEmail(ctx context.Context, username, email string) (*entities.User, error) {
+	var result *entities.User
+	for _, user := range m.entities {
+		if user.Email == email {
+			result = user
+		}
+	}
+
+	if result == nil {
+		return nil, &entities.NotFoundError{Message: "User not found with email " + email}
+	}
+
+	return result, nil
+}
 
 func (m *UserRepository) All(ctx context.Context) ([]*entities.User, error) {
 	if ctx.Value("query_error") != nil {

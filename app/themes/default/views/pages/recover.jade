@@ -1,0 +1,19 @@
+extends ../partials/layout.jade
+
+block content
+  :go:func Recover(email string)
+  .container
+    .layout
+      .left
+      .main
+        .box.login
+          h1.text-center Password recovery
+          +Messages(meta.Messages)
+          form(action="", method="post")
+            p
+              label.required Email
+              input(type="email", name="email", placeholder="Email" value=email)
+            div
+              button.btn.btn-primary(type="submit" style="background: #313131") Restore password
+              | &nbsp;&nbsp;
+      .right

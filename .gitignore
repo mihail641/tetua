@@ -9,7 +9,7 @@ test/*.txt
 test/*.html
 dist/
 .vscode
-views
 .idea
 node_modules/
 config.json
+*.jade.go

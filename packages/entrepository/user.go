@@ -58,6 +58,19 @@ func (u *UserRepository) ByUsernameOrEmail(ctx context.Context, username, email 
 
 	return entUsersToUsers(user), nil
 }
+func (u *UserRepository) ByEmail(ctx context.Context, username, email string) (*entities.User, error) {
+	user, err := u.Client.User.
+		Query().
+		Where(user.EmailEQ(email)).
+		WithRoles().
+		WithAvatarImage().
+		Only(ctx)
+	if err != nil {
+		return nil, EntError(err, fmt.Sprintf("user not found with username or email: %s %s", username, email))
+	}
+
+	return entUserToUser(user), nil
+}
 
 func (u *UserRepository) ByProvider(ctx context.Context, providerName, providerId string) (*entities.User, error) {
 	user, err := u.Client.User.
