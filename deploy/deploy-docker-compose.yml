@@ -1,0 +1,41 @@
+version: '3.9'
+
+services:
+  tetua:
+    restart: unless-stopped
+    image:  my-golang-app:latest
+    env_file:
+      - .env
+    environment:
+      APP_ENV: production
+      APP_KEY: BpLnfgDsc2WD8F2qNfHK5a84jjJkwzDk
+      APP_PORT: 3000
+      DB_DSN: ${MYSQL_USER}:${MYSQL_PASSWORD}@tcp(db:3306)/${MYSQL_DATABASE}?charset=utf8mb4&collation=utf8mb4_unicode_ci&parseTime=true
+      DB_QUERY_LOGGING: "false"
+    ports:
+      - 3000:3000
+    depends_on:
+      - db
+    networks:
+      default:
+#    command: ["setup", "-u", "admin", "-p", "password"]
+    command: ["run"]
+    volumes:
+      - myapp:/public/files/2023
+  db:
+    image: mysql:8.0.32
+    restart: always
+    env_file:
+      - .env
+    environment:
+      - MYSQL_ROOT_PASSWORD=root_password_rbs
+
+    volumes:
+      - db:/var/lib/mysql
+    networks:
+      default:
+volumes:
+  db:
+  myapp:
+networks:
+  default:

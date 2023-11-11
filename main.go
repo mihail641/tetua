@@ -126,7 +126,7 @@ func main() {
 				Name:  "bundlestatic",
 				Usage: "Bundle static files",
 				Action: func(c *cli.Context) error {
-					prepare(getWd(c))
+					//prepare(getWd(c))
 					themeDir := path.Join(config.ROOT_DIR, "app/themes", config.APP_THEME)
 					asset.Load(themeDir, true)
 					return cmd.BundleStaticAssets()

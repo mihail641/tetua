@@ -2,7 +2,6 @@ package config
 
 import (
 	"encoding/json"
-	"errors"
 	"fmt"
 	"github.com/ngocphuongnb/tetua/app/fs"
 	"io/ioutil"
@@ -141,46 +140,7 @@ func parseConfigFile() {
 	configFile := path.Join(WD, "config.json")
 	cfg := &ConfigFile{}
 
-	if _, err := os.Stat(configFile); !errors.Is(err, os.ErrNotExist) {
-		file, _ := ioutil.ReadFile(configFile)
-
-		if err := json.Unmarshal([]byte(file), cfg); err != nil {
-			panic(err)
-		}
-
-		Mail = cfg.Mail
-		Auth = cfg.Auth
-
-		if cfg.APP_ENV != "" {
-			APP_ENV = cfg.APP_ENV
-		}
-
-		if cfg.APP_PORT != "" {
-			APP_PORT = cfg.APP_PORT
-		}
-
-		if cfg.DB_DSN != "" {
-			DB_DSN = cfg.DB_DSN
-		}
-
-		if cfg.APP_KEY != "" {
-			APP_KEY = cfg.APP_KEY
-		}
-
-		if cfg.APP_TOKEN_KEY != "" {
-			APP_TOKEN_KEY = cfg.APP_TOKEN_KEY
-		}
-
-		if cfg.APP_THEME != "" {
-			APP_THEME = cfg.APP_THEME
-		}
-
-		if cfg.COOKIE_UUID != "" {
-			COOKIE_UUID = cfg.COOKIE_UUID
-		}
-
-		SHOW_TETUA_BLOCK = cfg.SHOW_TETUA_BLOCK
-		DB_QUERY_LOGGING = cfg.DB_QUERY_LOGGING
+	if _, err := os.Stat(configFile); err != nil {
 		STORAGES = &fs.StorageConfig{
 			DefaultDisk: "local_public",
 			DiskConfigs: []*fs.DiskConfig{{
@@ -196,25 +156,81 @@ func parseConfigFile() {
 				Root:   path.Join(PRIVATE_DIR, "storage"),
 			}},
 		}
+		return
+	}
 
-		if cfg.STORAGES != nil {
-			if cfg.STORAGES.DefaultDisk != "" {
-				STORAGES.DefaultDisk = cfg.STORAGES.DefaultDisk
-			}
+	file, _ := ioutil.ReadFile(configFile)
 
-			if cfg.STORAGES.DiskConfigs != nil && len(cfg.STORAGES.DiskConfigs) > 0 {
-				for _, disk := range cfg.STORAGES.DiskConfigs {
-					diskExisted := false
-					for _, currentDisk := range STORAGES.DiskConfigs {
-						if currentDisk.Name == disk.Name {
-							diskExisted = true
-							break
-						}
+	if err := json.Unmarshal([]byte(file), cfg); err != nil {
+		panic(err)
+	}
+
+	Mail = cfg.Mail
+	Auth = cfg.Auth
+
+	if cfg.APP_ENV != "" {
+		APP_ENV = cfg.APP_ENV
+	}
+
+	if cfg.APP_PORT != "" {
+		APP_PORT = cfg.APP_PORT
+	}
+
+	if cfg.DB_DSN != "" {
+		DB_DSN = cfg.DB_DSN
+	}
+
+	if cfg.APP_KEY != "" {
+		APP_KEY = cfg.APP_KEY
+	}
+
+	if cfg.APP_TOKEN_KEY != "" {
+		APP_TOKEN_KEY = cfg.APP_TOKEN_KEY
+	}
+
+	if cfg.APP_THEME != "" {
+		APP_THEME = cfg.APP_THEME
+	}
+
+	if cfg.COOKIE_UUID != "" {
+		COOKIE_UUID = cfg.COOKIE_UUID
+	}
+
+	SHOW_TETUA_BLOCK = cfg.SHOW_TETUA_BLOCK
+	DB_QUERY_LOGGING = cfg.DB_QUERY_LOGGING
+	STORAGES = &fs.StorageConfig{
+		DefaultDisk: "local_public",
+		DiskConfigs: []*fs.DiskConfig{{
+			Name:   "local_public",
+			Driver: "local",
+			Root:   path.Join(PUBLIC_DIR, "files"),
+			BaseUrlFn: func() string {
+				return Setting("file_base_url") + "/files"
+			},
+		}, {
+			Name:   "local_private",
+			Driver: "local",
+			Root:   path.Join(PRIVATE_DIR, "storage"),
+		}},
+	}
+
+	if cfg.STORAGES != nil {
+		if cfg.STORAGES.DefaultDisk != "" {
+			STORAGES.DefaultDisk = cfg.STORAGES.DefaultDisk
+		}
+
+		if cfg.STORAGES.DiskConfigs != nil && len(cfg.STORAGES.DiskConfigs) > 0 {
+			for _, disk := range cfg.STORAGES.DiskConfigs {
+				diskExisted := false
+				for _, currentDisk := range STORAGES.DiskConfigs {
+					if currentDisk.Name == disk.Name {
+						diskExisted = true
+						break
 					}
+				}
 
-					if !diskExisted {
-						STORAGES.DiskConfigs = append(STORAGES.DiskConfigs, disk)
-					}
+				if !diskExisted {
+					STORAGES.DiskConfigs = append(STORAGES.DiskConfigs, disk)
 				}
 			}
 		}
