@@ -2,7 +2,8 @@ import { Editor } from '@tiptap/core';
 import Image from '@tiptap/extension-image';
 import { createNodeViewBlock } from '../utils';
 
-export type ImageUploadHandler = (file: File, callback: (url: string, err?: Error) => void) => void;
+type FileType="image" | "other"
+export type ImageUploadHandler = (file: File,fileType:FileType, callback: (url: string, err?: Error) => void) => void;
 export interface ImageExtensionProps {
   uploadHandler?: ImageUploadHandler;
   disableTitle?: boolean;
@@ -71,11 +72,11 @@ const createImageUploadElm = (dom: HTMLDivElement, uploadHandler: ImageUploadHan
     const target = e.target as HTMLInputElement;
     const file = target.files[0];
     dom.classList.add('uploading');
-    uploadHandler(file, (url, err) => {
+    uploadHandler(file, "image", (url, err: any) => {
       dom.classList.remove('uploading');
       if (err) {
         console.error(err);
-        alert('Upload failed');
+        alert('Upload failed. '+err.message);
         return;
       }
 
@@ -130,7 +131,7 @@ export const getImageExtension = (props: ImageExtensionProps = {}) => {
             }
           }
 
-          uploadHandler(file, (url, err) => {
+          uploadHandler(file, "image",(url, err) => {
             if (err) {
               console.error(err);
               alert('Upload failed');

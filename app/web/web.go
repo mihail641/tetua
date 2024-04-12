@@ -21,6 +21,7 @@ import (
 type Config struct {
 	JwtSigningKey string
 	Theme         string
+	BodyLimit     int
 }
 
 var (
@@ -78,6 +79,7 @@ var (
 	authFileUpload = auth.Config(&server.AuthConfig{
 		Action:       "file.upload",
 		DefaultValue: entities.PERM_OWN,
+		Prepare:      auth.GetTypeFile,
 		OwnCheckFN:   auth.AllowLoggedInUser,
 	})
 
@@ -171,7 +173,7 @@ func NewServer(cfg Config) server.Server {
 	comment.Delete("/:id", webcomment.Delete, authCommentDelete)
 
 	file := s.Group("/files")
-	file.Post("/upload", Upload, authFileUpload)
+	file.Post("/upload/:fileType", Upload, authFileUpload)
 	file.Get("", FileList, authFileList)
 	file.Delete("/:id", FileDelete, authFileDelete)
 

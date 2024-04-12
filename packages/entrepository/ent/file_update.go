@@ -108,6 +108,12 @@ func (fu *FileUpdate) ClearUserID() *FileUpdate {
 	return fu
 }
 
+// SetCompression sets the "compression" field.
+func (fu *FileUpdate) SetCompression(b bool) *FileUpdate {
+	fu.mutation.SetCompression(b)
+	return fu
+}
+
 // SetUser sets the "user" edge to the User entity.
 func (fu *FileUpdate) SetUser(u *User) *FileUpdate {
 	return fu.SetUserID(u.ID)
@@ -366,6 +372,13 @@ func (fu *FileUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Type:   field.TypeInt,
 			Value:  value,
 			Column: file.FieldSize,
+		})
+	}
+	if value, ok := fu.mutation.Compression(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeBool,
+			Value:  value,
+			Column: file.FieldCompression,
 		})
 	}
 	if fu.mutation.UserCleared() {
@@ -661,6 +674,12 @@ func (fuo *FileUpdateOne) ClearUserID() *FileUpdateOne {
 	return fuo
 }
 
+// SetCompression sets the "compression" field.
+func (fuo *FileUpdateOne) SetCompression(b bool) *FileUpdateOne {
+	fuo.mutation.SetCompression(b)
+	return fuo
+}
+
 // SetUser sets the "user" edge to the User entity.
 func (fuo *FileUpdateOne) SetUser(u *User) *FileUpdateOne {
 	return fuo.SetUserID(u.ID)
@@ -943,6 +962,13 @@ func (fuo *FileUpdateOne) sqlSave(ctx context.Context) (_node *File, err error) 
 			Type:   field.TypeInt,
 			Value:  value,
 			Column: file.FieldSize,
+		})
+	}
+	if value, ok := fuo.mutation.Compression(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeBool,
+			Value:  value,
+			Column: file.FieldCompression,
 		})
 	}
 	if fuo.mutation.UserCleared() {

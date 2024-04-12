@@ -49,6 +49,7 @@ type StaticConfig struct {
 }
 
 type Context interface {
+	Body() []byte
 	RequestID() string
 	Hostname() string
 	BaseUrl() string

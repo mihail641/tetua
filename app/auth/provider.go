@@ -12,6 +12,7 @@ type NewProviderFn func(cfg map[string]string) server.AuthProvider
 
 func New(newProviderFns map[string]NewProviderFn) {
 	if config.Auth == nil || len(config.Auth.Providers) == 0 {
+		config.Auth = &config.AuthConfig{}
 		return
 	}
 

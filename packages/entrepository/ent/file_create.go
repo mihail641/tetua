@@ -105,6 +105,12 @@ func (fc *FileCreate) SetNillableUserID(i *int) *FileCreate {
 	return fc
 }
 
+// SetCompression sets the "compression" field.
+func (fc *FileCreate) SetCompression(b bool) *FileCreate {
+	fc.mutation.SetCompression(b)
+	return fc
+}
+
 // SetUser sets the "user" edge to the User entity.
 func (fc *FileCreate) SetUser(u *User) *FileCreate {
 	return fc.SetUserID(u.ID)
@@ -256,6 +262,9 @@ func (fc *FileCreate) check() error {
 	if _, ok := fc.mutation.Size(); !ok {
 		return &ValidationError{Name: "size", err: errors.New(`ent: missing required field "File.size"`)}
 	}
+	if _, ok := fc.mutation.Compression(); !ok {
+		return &ValidationError{Name: "compression", err: errors.New(`ent: missing required field "File.compression"`)}
+	}
 	return nil
 }
 
@@ -339,6 +348,14 @@ func (fc *FileCreate) createSpec() (*File, *sqlgraph.CreateSpec) {
 			Column: file.FieldSize,
 		})
 		_node.Size = value
+	}
+	if value, ok := fc.mutation.Compression(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeBool,
+			Value:  value,
+			Column: file.FieldCompression,
+		})
+		_node.Compression = value
 	}
 	if nodes := fc.mutation.UserIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
@@ -585,6 +602,18 @@ func (u *FileUpsert) ClearUserID() *FileUpsert {
 	return u
 }
 
+// SetCompression sets the "compression" field.
+func (u *FileUpsert) SetCompression(v bool) *FileUpsert {
+	u.Set(file.FieldCompression, v)
+	return u
+}
+
+// UpdateCompression sets the "compression" field to the value that was provided on create.
+func (u *FileUpsert) UpdateCompression() *FileUpsert {
+	u.SetExcluded(file.FieldCompression)
+	return u
+}
+
 // UpdateNewValues updates the mutable fields using the new values that were set on create.
 // Using this option is equivalent to using:
 //
@@ -762,6 +791,20 @@ func (u *FileUpsertOne) UpdateUserID() *FileUpsertOne {
 func (u *FileUpsertOne) ClearUserID() *FileUpsertOne {
 	return u.Update(func(s *FileUpsert) {
 		s.ClearUserID()
+	})
+}
+
+// SetCompression sets the "compression" field.
+func (u *FileUpsertOne) SetCompression(v bool) *FileUpsertOne {
+	return u.Update(func(s *FileUpsert) {
+		s.SetCompression(v)
+	})
+}
+
+// UpdateCompression sets the "compression" field to the value that was provided on create.
+func (u *FileUpsertOne) UpdateCompression() *FileUpsertOne {
+	return u.Update(func(s *FileUpsert) {
+		s.UpdateCompression()
 	})
 }
 
@@ -1106,6 +1149,20 @@ func (u *FileUpsertBulk) UpdateUserID() *FileUpsertBulk {
 func (u *FileUpsertBulk) ClearUserID() *FileUpsertBulk {
 	return u.Update(func(s *FileUpsert) {
 		s.ClearUserID()
+	})
+}
+
+// SetCompression sets the "compression" field.
+func (u *FileUpsertBulk) SetCompression(v bool) *FileUpsertBulk {
+	return u.Update(func(s *FileUpsert) {
+		s.SetCompression(v)
+	})
+}
+
+// UpdateCompression sets the "compression" field to the value that was provided on create.
+func (u *FileUpsertBulk) UpdateCompression() *FileUpsertBulk {
+	return u.Update(func(s *FileUpsert) {
+		s.UpdateCompression()
 	})
 }
 

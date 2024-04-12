@@ -213,9 +213,7 @@ func (m *Meta) GetTitle() string {
 	title := config.Setting("app_name")
 
 	if m.Title != "" {
-		title = fmt.Sprintf("%s ", m.Title)
-	} else {
-		title = fmt.Sprintf(title)
+		title = fmt.Sprintf("%s - %s", m.Title, title)
 	}
 
 	return title

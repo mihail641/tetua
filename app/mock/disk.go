@@ -3,10 +3,9 @@ package mock
 import (
 	"context"
 	"errors"
+	"github.com/ngocphuongnb/tetua/app/fs"
 	"io"
 	"mime/multipart"
-
-	"github.com/ngocphuongnb/tetua/app/fs"
 )
 
 type Disk struct {
@@ -43,9 +42,10 @@ func (d *Disk) PutMultipart(ctx context.Context, m *multipart.FileHeader, dsts .
 	}
 
 	return &fs.FileInfo{
-		Disk: d.Name(),
-		Path: m.Filename,
-		Type: mime,
-		Size: 100,
+		Disk:        d.Name(),
+		Path:        m.Filename,
+		Type:        mime,
+		Size:        100,
+		Compression: true,
 	}, nil
 }

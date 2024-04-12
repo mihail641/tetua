@@ -1,6 +1,7 @@
 package fiberserver
 
 import (
+	"math"
 	"net/http"
 
 	"github.com/gofiber/fiber/v2"
@@ -19,6 +20,7 @@ type Config struct {
 	JwtSigningKey string
 	AppName       string
 	JSONEncoder   utils.JSONMarshal
+	BodyLimit     int
 }
 
 func New(config Config) server.Server {
@@ -29,6 +31,7 @@ func New(config Config) server.Server {
 		EnablePrintRoutes:     false,
 		DisableStartupMessage: false,
 		JSONEncoder:           config.JSONEncoder,
+		BodyLimit:             math.MaxInt,
 		// Prefork:       true,
 		// Immutable:     true,
 	})

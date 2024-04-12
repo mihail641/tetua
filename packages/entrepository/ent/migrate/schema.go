@@ -58,6 +58,7 @@ var (
 		{Name: "path", Type: field.TypeString, SchemaType: map[string]string{"mysql": "varchar(500)"}},
 		{Name: "type", Type: field.TypeString},
 		{Name: "size", Type: field.TypeInt},
+		{Name: "compression", Type: field.TypeBool},
 		{Name: "user_id", Type: field.TypeInt, Nullable: true},
 	}
 	// FilesTable holds the schema information for the "files" table.
@@ -68,7 +69,7 @@ var (
 		ForeignKeys: []*schema.ForeignKey{
 			{
 				Symbol:     "file_user",
-				Columns:    []*schema.Column{FilesColumns[8]},
+				Columns:    []*schema.Column{FilesColumns[9]},
 				RefColumns: []*schema.Column{UsersColumns[0]},
 				OnDelete:   schema.SetNull,
 			},

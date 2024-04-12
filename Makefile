@@ -3,6 +3,9 @@ build_editor:
 	rm -rf packages/editor/dist/*
 	cd packages/editor && yarn build
 
+watch_editor:
+	cd packages/editor && yarn dev
+
 build_app:
 	echo "Building app..."
 	rm -rf views/*.go

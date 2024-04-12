@@ -56,14 +56,15 @@ var schemaGraph = func() *sqlgraph.Schema {
 		},
 		Type: "File",
 		Fields: map[string]*sqlgraph.FieldSpec{
-			file.FieldCreatedAt: {Type: field.TypeTime, Column: file.FieldCreatedAt},
-			file.FieldUpdatedAt: {Type: field.TypeTime, Column: file.FieldUpdatedAt},
-			file.FieldDeletedAt: {Type: field.TypeTime, Column: file.FieldDeletedAt},
-			file.FieldDisk:      {Type: field.TypeString, Column: file.FieldDisk},
-			file.FieldPath:      {Type: field.TypeString, Column: file.FieldPath},
-			file.FieldType:      {Type: field.TypeString, Column: file.FieldType},
-			file.FieldSize:      {Type: field.TypeInt, Column: file.FieldSize},
-			file.FieldUserID:    {Type: field.TypeInt, Column: file.FieldUserID},
+			file.FieldCreatedAt:   {Type: field.TypeTime, Column: file.FieldCreatedAt},
+			file.FieldUpdatedAt:   {Type: field.TypeTime, Column: file.FieldUpdatedAt},
+			file.FieldDeletedAt:   {Type: field.TypeTime, Column: file.FieldDeletedAt},
+			file.FieldDisk:        {Type: field.TypeString, Column: file.FieldDisk},
+			file.FieldPath:        {Type: field.TypeString, Column: file.FieldPath},
+			file.FieldType:        {Type: field.TypeString, Column: file.FieldType},
+			file.FieldSize:        {Type: field.TypeInt, Column: file.FieldSize},
+			file.FieldUserID:      {Type: field.TypeInt, Column: file.FieldUserID},
+			file.FieldCompression: {Type: field.TypeBool, Column: file.FieldCompression},
 		},
 	}
 	graph.Nodes[2] = &sqlgraph.Node{
@@ -739,6 +740,11 @@ func (f *FileFilter) WhereSize(p entql.IntP) {
 // WhereUserID applies the entql int predicate on the user_id field.
 func (f *FileFilter) WhereUserID(p entql.IntP) {
 	f.Where(p.Field(file.FieldUserID))
+}
+
+// WhereCompression applies the entql bool predicate on the compression field.
+func (f *FileFilter) WhereCompression(p entql.BoolP) {
+	f.Where(p.Field(file.FieldCompression))
 }
 
 // WhereHasUser applies a predicate to check if query has an edge user.

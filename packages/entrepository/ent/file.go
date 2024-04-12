@@ -33,6 +33,8 @@ type File struct {
 	Size int `json:"size,omitempty"`
 	// UserID holds the value of the "user_id" field.
 	UserID int `json:"user_id,omitempty"`
+	// Compression holds the value of the "compression" field.
+	Compression bool `json:"compression,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the FileQuery when eager-loading is set.
 	Edges FileEdges `json:"edges"`
@@ -99,6 +101,8 @@ func (*File) scanValues(columns []string) ([]interface{}, error) {
 	values := make([]interface{}, len(columns))
 	for i := range columns {
 		switch columns[i] {
+		case file.FieldCompression:
+			values[i] = new(sql.NullBool)
 		case file.FieldID, file.FieldSize, file.FieldUserID:
 			values[i] = new(sql.NullInt64)
 		case file.FieldDisk, file.FieldPath, file.FieldType:
@@ -174,6 +178,12 @@ func (f *File) assignValues(columns []string, values []interface{}) error {
 			} else if value.Valid {
 				f.UserID = int(value.Int64)
 			}
+		case file.FieldCompression:
+			if value, ok := values[i].(*sql.NullBool); !ok {
+				return fmt.Errorf("unexpected type %T for field compression", values[i])
+			} else if value.Valid {
+				f.Compression = value.Bool
+			}
 		}
 	}
 	return nil
@@ -238,6 +248,8 @@ func (f *File) String() string {
 	builder.WriteString(fmt.Sprintf("%v", f.Size))
 	builder.WriteString(", user_id=")
 	builder.WriteString(fmt.Sprintf("%v", f.UserID))
+	builder.WriteString(", compression=")
+	builder.WriteString(fmt.Sprintf("%v", f.Compression))
 	builder.WriteByte(')')
 	return builder.String()
 }

@@ -58,13 +58,14 @@ function listenDeleteNodeEvents(nodeType, url, callback) {
   }
 }
 
-function uploadHandler(file, callback) {
+function uploadHandler(file, fileType, callback) {
   const formData = new FormData();
   formData.append("file", file);
-  fetch("/files/upload", { method: "POST", body: formData })
-    .then((res) => {
+  fetch(`/files/upload/${fileType}`, { method: "POST", body: formData })
+    .then( async (res) => {
       if (!res.ok) {
-        throw new Error("File upload failed");
+        const errorData = await res.json();
+        throw new Error(errorData.error);
       }
 
       return res.json()

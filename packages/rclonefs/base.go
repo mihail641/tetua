@@ -4,6 +4,8 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"github.com/ngocphuongnb/tetua/app/image_utils"
+	"github.com/ngocphuongnb/tetua/app/utils"
 	"io"
 	"mime/multipart"
 	"net/http"
@@ -14,8 +16,6 @@ import (
 	"time"
 
 	"github.com/ngocphuongnb/tetua/app/fs"
-	"github.com/ngocphuongnb/tetua/app/utils"
-
 	rclonefs "github.com/rclone/rclone/fs"
 	"github.com/rclone/rclone/fs/object"
 )
@@ -83,6 +83,10 @@ func (r *BaseRcloneDisk) Name() string {
 }
 
 func (r *BaseRcloneDisk) Put(ctx context.Context, reader io.Reader, size int64, mime, dst string) (*fs.FileInfo, error) {
+	imageCompression := false
+	if ctx.Value("fileType") == string(image_utils.FileType) {
+		imageCompression = true
+	}
 	objectInfo := object.NewStaticObjectInfo(
 		dst,
 		time.Now(),
@@ -97,35 +101,31 @@ func (r *BaseRcloneDisk) Put(ctx context.Context, reader io.Reader, size int64, 
 	if err != nil {
 		return nil, err
 	}
-
 	return &fs.FileInfo{
-		Disk: r.DiskName,
-		Path: dst,
-		Type: mime,
-		Size: int(rs.Size()),
+		Disk:        r.DiskName,
+		Path:        dst,
+		Type:        mime,
+		Size:        int(rs.Size()),
+		Compression: imageCompression,
 	}, nil
 }
 
 func (r *BaseRcloneDisk) PutMultipart(ctx context.Context, m *multipart.FileHeader, dsts ...string) (*fs.FileInfo, error) {
 	f, err := m.Open()
-
 	if err != nil {
 		return nil, err
 	}
 
 	fileHeader := make([]byte, 512)
-
 	if _, err := f.Read(fileHeader); err != nil {
 		return nil, err
 	}
-
 	if _, err := f.Seek(0, 0); err != nil {
 		return nil, err
 	}
 
 	dst := ""
 	mime := http.DetectContentType(fileHeader)
-
 	if !utils.SliceContains(allowedMimes, strings.ToLower(mime)) {
 		return nil, errors.New("file type is not allowed")
 	}
@@ -135,7 +135,16 @@ func (r *BaseRcloneDisk) PutMultipart(ctx context.Context, m *multipart.FileHead
 	} else {
 		dst = r.UploadFilePath(m.Filename)
 	}
+	if ctx.Value("fileType") == string(image_utils.FileType) {
+		if !image_utils.IsValidImageType(mime) {
+			return nil, errors.New("Error saving file, incorrect file extension required bmp, jpeg, jpg, png")
+		}
+		f, err = image_utils.RunImageCompression(f)
+		if err != nil {
+			return nil, err
+		}
 
+	}
 	return r.Put(ctx, f, m.Size, mime, dst)
 }
 

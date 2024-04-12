@@ -18,7 +18,7 @@ func TestFile(t *testing.T) {
 	fs.New("disk_mock", []fs.FSDisk{&mock.Disk{}})
 	mockLogger := mock.CreateLogger(true)
 	mockServer := mock.CreateServer()
-	mockServer.Post("/test-upload-invalid-header", func(c server.Context) error {
+	mockServer.Post("/image/test-upload-invalid-header", func(c server.Context) error {
 		f, err := services.SaveFile(c, "featured_image")
 		assert.Equal(t, (*entities.File)(nil), f)
 		assert.Equal(t, fasthttp.ErrNoMultipartForm, err)
@@ -26,9 +26,9 @@ func TestFile(t *testing.T) {
 		return c.SendString("ok")
 	})
 
-	mock.PostRequest(mockServer, "/test-upload-invalid-header")
+	mock.PostRequest(mockServer, "/image/test-upload-invalid-header")
 
-	mockServer.Post("/test-upload-empty", func(c server.Context) error {
+	mockServer.Post("/image/test-upload-empty", func(c server.Context) error {
 		f, err := services.SaveFile(c, "featured_image")
 		assert.Equal(t, (*entities.File)(nil), f)
 		assert.NoError(t, err)
@@ -36,10 +36,10 @@ func TestFile(t *testing.T) {
 		return c.SendString("ok")
 	})
 
-	req := mock.CreateUploadRequest("POST", "/test-upload-empty", "some_field", "image.jpg")
+	req := mock.CreateUploadRequest("POST", "/image/test-upload-empty", "some_field", "image.jpg")
 	mockServer.Test(req)
 
-	mockServer.Post("/test-upload-disk-error", func(c server.Context) error {
+	mockServer.Post("/image/test-upload-disk-error", func(c server.Context) error {
 		f, err := services.SaveFile(c, "featured_image")
 		assert.Equal(t, (*entities.File)(nil), f)
 		assert.Equal(t, "PutMultipart error", err.Error())
@@ -47,10 +47,10 @@ func TestFile(t *testing.T) {
 		return c.SendString("ok")
 	})
 
-	req = mock.CreateUploadRequest("POST", "/test-upload-disk-error", "featured_image", "error.jpg")
+	req = mock.CreateUploadRequest("POST", "/image/test-upload-disk-error", "featured_image", "error.jpg")
 	mockServer.Test(req)
 
-	mockServer.Post("/test-upload-success", func(c server.Context) error {
+	mockServer.Post("/image/test-upload-success", func(c server.Context) error {
 		c.Locals("user", &entities.User{ID: 2})
 		f, err := services.SaveFile(c, "featured_image")
 		assert.NoError(t, err)
@@ -60,9 +60,10 @@ func TestFile(t *testing.T) {
 		assert.Equal(t, "image/jpeg", f.Type)
 		assert.Equal(t, 100, f.Size)
 		assert.Equal(t, 2, f.UserID)
+		assert.Equal(t, true, f.Compression)
 		return c.SendString("ok")
 	})
 
-	req = mock.CreateUploadRequest("POST", "/test-upload-success", "featured_image", "image.jpg")
+	req = mock.CreateUploadRequest("POST", "/image/test-upload-success", "featured_image", "image.jpg")
 	mockServer.Test(req)
 }

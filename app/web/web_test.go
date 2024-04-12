@@ -2,13 +2,9 @@ package web_test
 
 import (
 	"context"
+	"encoding/json"
 	"errors"
 	"fmt"
-	"net/http"
-	"strings"
-	"testing"
-	"time"
-
 	"github.com/PuerkitoBio/goquery"
 	"github.com/ngocphuongnb/tetua/app/auth"
 	"github.com/ngocphuongnb/tetua/app/cache"
@@ -23,6 +19,12 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/tdewolff/minify/v2"
 	"github.com/tdewolff/minify/v2/xml"
+	"net/http"
+
+	"strconv"
+	"strings"
+	"testing"
+	"time"
 )
 
 var m = minify.New()
@@ -30,6 +32,14 @@ var mockLogger *mock.MockLogger
 var post1, post2 *entities.Post
 var file1, file2, file3 *entities.File
 var topic1 *entities.Topic
+
+type expected struct {
+	size        int    `json:"size"`
+	typeFile    string `json:"typeFile"`
+	url         string `json:"url"`
+	pixels      string `json:"pixels"`
+	сompression bool   `json:"сompression"`
+}
 
 func init() {
 	m.AddFunc("xml", xml.Minify)
@@ -238,30 +248,141 @@ func TestFileDelete(t *testing.T) {
 
 func TestFileUpload(t *testing.T) {
 	mockServer := mock.CreateServer()
-	mockServer.Post("/files", func(c server.Context) error {
+	mockServer.Post("/files/:fileType", func(c server.Context) error {
 		return web.Upload(c)
 	})
 
-	req := mock.CreateUploadRequest("POST", "/files", "some_field", "file.jpg")
+	req := mock.CreateUploadRequest("POST", "/files/image", "some_field", "file.jpg")
 	body, _ := mock.SendRequest(mockServer, req)
 	assert.Equal(t, errors.New("there is no uploaded file associated with the given key"), mockLogger.Last().Params[0])
 	assert.Equal(t, `{"error":"Error saving file"}`, body)
 
-	req = mock.CreateUploadRequest("POST", "/files", "file", "error.jpg")
+	req = mock.CreateUploadRequest("POST", "/files/image", "file", "error.jpg")
 	body, _ = mock.SendRequest(mockServer, req)
 	assert.Equal(t, errors.New("PutMultipart error"), mockLogger.Last().Params[0])
 	assert.Equal(t, `{"error":"Error saving file"}`, body)
 
 	mockrepository.FakeRepoErrors["file_create"] = errors.New("Error creating file")
-	req = mock.CreateUploadRequest("POST", "/files", "file", "image.jpg")
+	req = mock.CreateUploadRequest("POST", "/files/image", "file", "image.jpg")
+	body, _ = mock.SendRequest(mockServer, req)
+	assert.Equal(t, errors.New("EOF"), mockLogger.Last().Params[0])
+	assert.Equal(t, `{"error":"Error saving file"}`, body)
+
+}
+
+func TestFileUpload2(t *testing.T) {
+	mockServer := mock.CreateServer()
+	mockServer.Post("/files/:fileType", func(c server.Context) error {
+		c.Locals("fileType", "image")
+		return web.Upload(c)
+	})
+	//проверка того что при входящем файле c расширением файла .jpg, файл будет помещен
+	//в базу данных, а поле в БД imageCompression будет содержать признак true
+	fileName := "firstFile.jpg"
+	req := mock.CreateUploadRequest("POST", "/files/image", "file", fileName)
+	body, resp := mock.SendRequest(mockServer, req)
+	expect := &expected{
+		size:        100,
+		typeFile:    "image/jpeg",
+		url:         "/disk_mock/" + fileName,
+		сompression: true,
+	}
+	expectedResult, err := json.Marshal(expect)
+	if err != nil {
+		fmt.Println("Error Marshaling, err")
+		return
+	}
+
+	body, err = strconv.Unquote(`"` + body + `"`)
+	if err != nil {
+		fmt.Println("Ошибка:", err)
+		return
+	}
+	assert.Equal(t, string(expectedResult), body)
+	//проверка того что при входящем файле c расширением файла .bmp, файл будет помещен
+	//в базу данных, а поле в БД imageCompression будет содержать признак true
+	fileName = "secondFile.bmp"
+	req = mock.CreateUploadRequest("POST", "/files", "file", fileName)
+	body, _ = mock.SendRequest(mockServer, req)
+
+	expect = &expected{
+		size:        100,
+		typeFile:    "image/jpeg",
+		url:         "/disk_mock/" + fileName,
+		сompression: true,
+	}
+	expectedResult, err = json.Marshal(expect)
+	if err != nil {
+		fmt.Println("Error Marshaling, err")
+		return
+	}
+	assert.Equal(t, http.StatusOK, resp.StatusCode)
+	body, err = strconv.Unquote(`"` + body + `"`)
+	if err != nil {
+		fmt.Println("Ошибка:", err)
+		return
+	}
+	assert.Equal(t, string(expectedResult), body)
+	//проверка того что при входящем файле c расширением файла .jpg, файл будет помещен
+	//в базу данных, а поле в БД imageCompression будет содержать признак true
+	fileName = "thirdFile.jpg"
+
+	req = mock.CreateUploadRequest("POST", "/files/image", "file", fileName)
+	body, _ = mock.SendRequest(mockServer, req)
+	expect = &expected{
+		size:        100,
+		typeFile:    "image/jpeg",
+		url:         "/disk_mock/" + fileName,
+		сompression: true,
+	}
+	expectedResult, err = json.Marshal(expect)
+	if err != nil {
+		fmt.Println("Error Marshaling, err")
+		return
+	}
+	assert.Equal(t, http.StatusOK, resp.StatusCode)
+	body, err = strconv.Unquote(`"` + body + `"`)
+	if err != nil {
+		fmt.Println("Ошибка:", err)
+		return
+	}
+	assert.Equal(t, string(expectedResult), body)
+	//проверка того что при входящем файле c расширением файла .png, файл будет помещен
+	//в базу данных, а поле в БД imageCompression будет содержать признак true
+	fileName = "forthFile.png"
+	req = mock.CreateUploadRequest("POST", "/files/image", "file", fileName)
+	body, _ = mock.SendRequest(mockServer, req)
+	expect = &expected{
+		size:        100,
+		typeFile:    "image/jpeg",
+		url:         "/disk_mock/" + fileName,
+		сompression: true,
+	}
+	expectedResult, err = json.Marshal(expect)
+	if err != nil {
+		fmt.Println("Error Marshaling, err")
+		return
+	}
+	assert.Equal(t, http.StatusOK, resp.StatusCode)
+	body, err = strconv.Unquote(`"` + body + `"`)
+	if err != nil {
+		fmt.Println("Ошибка:", err)
+		return
+	}
+	assert.Equal(t, string(expectedResult), body)
+	//проверка того что при входящем файле величиной 1980x1080 пикселей, и расширением файла .tif, файл не будет загружен
+
+	mockrepository.FakeRepoErrors["file_create"] = nil
+	req = mock.CreateUploadRequest("POST", "/files", "file", "image.tif")
 	body, _ = mock.SendRequest(mockServer, req)
 	assert.Equal(t, errors.New("Error creating file"), mockLogger.Last().Params[0])
 	assert.Equal(t, `{"error":"Error saving file"}`, body)
-
+	//проверка того что при входящем файле величиной 1980x1080 пикселей, и расширением файла .svg, файл не будет загружен
 	mockrepository.FakeRepoErrors["file_create"] = nil
-	req = mock.CreateUploadRequest("POST", "/files", "file", "image.jpg")
+	req = mock.CreateUploadRequest("POST", "/files", "file", "image.svg")
 	body, _ = mock.SendRequest(mockServer, req)
-	assert.Equal(t, `{"size":100,"type":"image/jpeg","url":"/disk_mock/image.jpg"}`, body)
+	assert.Equal(t, errors.New("Error creating file"), mockLogger.Last().Params[0])
+	assert.Equal(t, `{"error":"Error saving file"}`, body)
 }
 
 func TestIndex(t *testing.T) {

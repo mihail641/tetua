@@ -12,17 +12,18 @@ import (
 )
 
 type File struct {
-	ID        int        `json:"id,omitempty"`
-	Disk      string     `json:"disk,omitempty"`
-	Path      string     `json:"path,omitempty"`
-	Type      string     `json:"type,omitempty"`
-	Size      int        `json:"size,omitempty"`
-	UserID    int        `json:"user_id,omitempty"`
-	User      *User      `json:"user,omitempty"`
-	Posts     []*Post    `json:"post,omitempty"`
-	CreatedAt *time.Time `json:"created_at,omitempty"`
-	UpdatedAt *time.Time `json:"updated_at,omitempty"`
-	DeletedAt *time.Time `json:"deleted_at,omitempty"`
+	ID          int        `json:"id,omitempty"`
+	Disk        string     `json:"disk,omitempty"`
+	Path        string     `json:"path,omitempty"`
+	Type        string     `json:"type,omitempty"`
+	Size        int        `json:"size,omitempty"`
+	UserID      int        `json:"user_id,omitempty"`
+	User        *User      `json:"user,omitempty"`
+	Posts       []*Post    `json:"post,omitempty"`
+	CreatedAt   *time.Time `json:"created_at,omitempty"`
+	UpdatedAt   *time.Time `json:"updated_at,omitempty"`
+	DeletedAt   *time.Time `json:"deleted_at,omitempty"`
+	Compression bool       `json:"compression,omitempty"`
 }
 
 func (f *File) Url() string {

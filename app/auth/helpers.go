@@ -77,6 +77,12 @@ func GetPost(c server.Context) error {
 	return nil
 }
 
+func GetTypeFile(c server.Context) error {
+	fileType := c.Param("fileType")
+	c.Locals("fileType", fileType)
+	return nil
+}
+
 func GetComment(c server.Context) error {
 	commentIDParam := c.Param("id")
 

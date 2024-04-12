@@ -25,6 +25,7 @@ func (File) Fields() []ent.Field {
 		field.String("type"),
 		field.Int("size"),
 		field.Int("user_id").Optional(),
+		field.Bool("compression"),
 	}
 }
 
